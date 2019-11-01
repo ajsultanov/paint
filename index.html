@@ -11,13 +11,13 @@
   </style>
 </head>
 <body>
-   <script src="app.js"></script>
-   <div></div>
+  <script src="app.js"></script>
+  <div></div>
   <script>
     let state = {
       tool: "draw",
       color: "#000000",
-      picture: Picture.empty(60, 30, "#f0f0f0")
+      picture: Picture.empty(64, 32, "#f0f0f0")
     };
     let app = new PixelEditor(state, {
       tools: {draw, fill, rectangle, pick},
