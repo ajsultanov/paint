@@ -1,5 +1,7 @@
 console.log("hewwo");
 
+// application state is an object with picture, tool, and color properties
+
 class Picture {
   constructor(width, height, pixels) {
     this.width = width;
@@ -7,12 +9,29 @@ class Picture {
     this.pixels = pixels;
   }
   static empty(width, height, color) {
+
+    // calling the Array constructor with an argument creates a new array with given length
+    // the fill method can be used to fill an array with a value (with optional index start and end values)
+
     let pixels = new Array(width * height).fill(color);
     return new Picture(width, height, pixels);
   }
+  /*
+    say we have a 4x4 picture, the array of pixels would look like this:
+      0, 1, 2, 3
+      4, 5, 6, 7
+      8, 9, 10, 11
+      12, 13, 14, 15
+
+    multiplying y by the width effectively operates the y-axis of this matrix
+    pixel(2, 3) = pixel 14
+    pixel(0, 1) = pixel 4
+    pixel(1, 0) = pixel 1
+  */
   pixel(x, y) {
     return this.pixels[x + y * this.width];
   }
+  // for updating many pixels at once
   draw(pixels) {
     let copy = this.pixels.slice();
     for (let {x, y, color} of pixels) {
