@@ -100,28 +100,30 @@ function drawPicture(picture, canvas, scale) {
   }
 }
 
-// you are here
 PictureCanvas.prototype.mouse = function(downEvent, onDown) {
-  console.log(downEvent);
   // 0 is the left mouse button, 1 middle and 2 right
   if (downEvent.button != 0) return;
   let pos = pointerPosition(downEvent, this.dom);
+  console.log(pos);
   let onMove = onDown(pos);
   if (!onMove) return;
   let move = moveEvent => {
     if (moveEvent.buttons == 0) {
       this.dom.removeEventListener("mousemove", move);
     } else {
-      let newPos = pointerPosition(moveEvent, thisdown.dom);
+      let newPos = pointerPosition(moveEvent, this.dom);
       if (newPos.x == pos.x && newPos.y == pos.y) return;
       pos = newPos;
       onMove(newPos);
     }
   };
+  // can return another callback function to be notified when the pointer is moved to a different pixel while held down
   this.dom.addEventListener("mousemove", move);
 };
 
+// takes initial mouseevent and the canvas element
 function pointerPosition(pos, domNode) {
+  // the position of the canvas on the screen
   let rect = domNode.getBoundingClientRect();
   return {x: Math.floor((pos.clientX - rect.left) / scale),
           y: Math.floor((pos.clientY - rect.top) / scale)};
