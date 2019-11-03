@@ -89,6 +89,7 @@ class PictureCanvas {
 function drawPicture(picture, canvas, scale) {
   canvas.width = picture.width * scale;
   canvas.height = picture.height * scale;
+  // CanvasRenderingContext2D
   let cx = canvas.getContext("2d");
 
   for (let y = 0; y < picture.height; y++) {
@@ -99,8 +100,10 @@ function drawPicture(picture, canvas, scale) {
   }
 }
 
-
+// you are here
 PictureCanvas.prototype.mouse = function(downEvent, onDown) {
+  console.log(downEvent);
+  // 0 is the left mouse button, 1 middle and 2 right
   if (downEvent.button != 0) return;
   let pos = pointerPosition(downEvent, this.dom);
   let onMove = onDown(pos);
@@ -109,7 +112,7 @@ PictureCanvas.prototype.mouse = function(downEvent, onDown) {
     if (moveEvent.buttons == 0) {
       this.dom.removeEventListener("mousemove", move);
     } else {
-      let newPos = pointerPosition(moveEvent, this.dom);
+      let newPos = pointerPosition(moveEvent, thisdown.dom);
       if (newPos.x == pos.x && newPos.y == pos.y) return;
       pos = newPos;
       onMove(newPos);
