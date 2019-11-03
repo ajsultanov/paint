@@ -41,11 +41,13 @@ class Picture {
   }
 }
 
-
+// allows the interface to dispatch actions which will change the state
 function updateState(state, action) {
+  // before ES6 used to be: return Object.assign({}, state, action);
   return {...state, ...action};
 }
 
+// helper function to create an element, give it some properties and child nodes
 
 function elt(type, props, ...children) {
   let dom = document.createElement(type);
@@ -57,23 +59,28 @@ function elt(type, props, ...children) {
   return dom;
 }
 
+// which allows the following style of registering event handlers
  document.body.appendChild(elt("button", {
    onclick: () => console.log("click")
  }, "Log click"));
 
-
+ // draws each pixel as a 10x10 square
 const scale = 10;
 
+// this component has two responsibilities: 1.displaying the picture as a grid of colored boxes and 2.communicating pointer events from this picture
+// cannot directly dispatch actions as it does not know the whole application state, only the current picture
 class PictureCanvas {
   constructor(picture, pointerDown) {
     this.dom = elt("canvas", {
       onmousedown: event => this.mouse(event, pointerDown),
       ontouchstart: event => this.touch(event, pointerDown)
     });
+    // console.log(this.mouse);
     this.syncState(picture);
   }
   syncState(picture) {
     if (this.picture == picture) return;
+    // only redraws when given a new picture
     this.picture = picture;
     drawPicture(this.picture, this.dom, scale);
   }
