@@ -1,9 +1,21 @@
 console.log("hewwo");
 
 // application state is an object with picture, tool, and color properties
+/*
+  state.picture
+    .width
+    .height
+    .pixels
+    .draw
+  state.tool
+  state.color
+  state.done?
+  state.doneAt?
+*/
 
 class Picture {
   constructor(width, height, pixels) {
+    console.log("picture");
     this.width = width;
     this.height = height;
     this.pixels = pixels;
@@ -71,6 +83,7 @@ const scale = 10;
 // cannot directly dispatch actions as it does not know the whole application state, only the current picture
 class PictureCanvas {
   constructor(picture, pointerDown) {
+    console.log("picturecanvas");
     this.dom = elt("canvas", {
       onmousedown: event => this.mouse(event, pointerDown),
       ontouchstart: event => this.touch(event, pointerDown)
@@ -129,10 +142,11 @@ function pointerPosition(pos, domNode) {
           y: Math.floor((pos.clientY - rect.top) / scale)};
 }
 
-
+// similar but with different events
 PictureCanvas.prototype.touch = function(startEvent, onDown) {
   let pos = pointerPosition(startEvent.touches[0], this.dom);
   let onMove = onDown(pos);
+  // prevents panning
   startEvent.preventDefault();
   if (!onMove) return;
   let move = moveEvent => {
@@ -149,9 +163,10 @@ PictureCanvas.prototype.touch = function(startEvent, onDown) {
   this.dom.addEventListener("touchend", end);
 };
 
-
+// container component for the picture canvas and tools
 class PixelEditor {
   constructor(state, config) {
+    console.log("pixeleditor");
     let {tools, controls, dispatch} = config;
     this.state = state;
 
@@ -163,6 +178,7 @@ class PixelEditor {
     this.controls = controls.map(
       Control => new Control(state, config));
     this.dom = elt("div", {}, this.canvas.dom, elt("br"),
+      // adds spaces between the controls' dom elements
       ...this.controls.reduce(
         (a, c) => a.concat(" ", c.dom), [])
       );
@@ -174,11 +190,13 @@ class PixelEditor {
   }
 }
 
-
+// 1st control
 class ToolSelect {
   constructor(state, {tools, dispatch}) {
+    console.log("toolselect");
     this.select = elt("select", {
       onchange: () => dispatch({tool: this.select.value})
+      // populates the select dropdown with the tools
     }, ...Object.keys(tools).map(name => elt("option", {
       selected: name == state.tool
     }, name)));
@@ -187,9 +205,10 @@ class ToolSelect {
   syncState(state) { this.select.value = state.tool; }
 }
 
-
+// 2nd control
 class ColorSelect {
   constructor(state, {dispatch}) {
+    console.log("colorselect");
     this.input = elt("input", {
       type: "color",
       value: state.color,
@@ -200,7 +219,7 @@ class ColorSelect {
   syncState(state) { this.input.value = state.color; }
 }
 
-
+//tools
 function draw(pos, state, dispatch) {
   function drawPixel({x, y}, state) {
     let drawn = {x, y, color: state.color};
@@ -210,7 +229,7 @@ function draw(pos, state, dispatch) {
   return drawPixel;
 }
 
-
+// redrawn on the picture from the *original* state, so you can resize the rectangle and only have the last one get redrawn
 function rectangle(start, state, dispatch) {
   function drawRectangle(pos) {
     let xStart = Math.min(start.x, pos.x);
@@ -229,7 +248,7 @@ function rectangle(start, state, dispatch) {
   return drawRectangle;
 }
 
-
+// a little similar to pathfinding code, but instead of finding a route through a graph, finds all "connected" pixels
 const around = [{dx: -1, dy: 0}, {dx: 1, dy: 0},
                 {dx: 0, dy: -1}, {dx: 0, dy: 1}];
 
@@ -258,6 +277,7 @@ function pick(pos, state, dispatch) {
 
 class SaveButton {
   constructor(state) {
+    console.log(savebutton);
     this.picture = state.picture;
     this.dom = elt("button", {
       onclick: () => this.save()
