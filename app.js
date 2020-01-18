@@ -46,6 +46,7 @@ class Picture {
   // for updating many pixels at once
   draw(pixels) {
     let copy = this.pixels.slice();
+    //        ?  ? where do these come from
     for (let {x, y, color} of pixels) {
       copy[x + y * this.width] = color;
     }
@@ -73,8 +74,17 @@ function elt(type, props, ...children) {
 
 // which allows the following style of registering event handlers
  document.body.appendChild(elt("button", {
-   onclick: () => console.log("click")
+   onclick: () => console.log("click"),
+   type: "button",
+   className: "fancy-button",
+   style: "font-style: italic; background-color: #fed"
  }, "Log click"));
+
+ document.body.appendChild(elt("button", {
+   onclick: () => console.log("click dos"),
+   type: "button",
+   disabled: true
+ }, "Log click numero dos"));
 
  // draws each pixel as a 10x10 square
 const scale = 10;
