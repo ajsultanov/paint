@@ -13,6 +13,13 @@ console.log("hewwo");
   state.doneAt?
 */
 
+class ThrowSomethingAtTheDOM {
+  constructor() {
+
+    this.dom = elt("p", null, "PARAGRAPHER");
+  }
+}
+
 class Picture {
   constructor(width, height, pixels) {
     console.log("picture");
@@ -287,13 +294,14 @@ function pick(pos, state, dispatch) {
 
 class SaveButton {
   constructor(state) {
-    console.log(savebutton);
     this.picture = state.picture;
     this.dom = elt("button", {
       onclick: () => this.save()
     }, "💾 Save");
   }
   save() {
+    console.log("savebutton");
+
     let canvas = elt("canvas");
     drawPicture(this.picture, canvas, 1);
     let link = elt("a", {
