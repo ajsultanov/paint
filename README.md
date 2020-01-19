@@ -47,4 +47,63 @@
   - big chunky ui
   - ...
 
+#### toolbars
+aseprite:
+-marquee
+  - marquee (rect)
+  - marquee (ellipse)
+  - lasso (free)
+  - lasso (poly)
+  - wand
+- pencil
+  - pencil
+  - spray
+- eraser
+- dropper
+- zoom
+  - zoom
+  - hand
+- move
+  - move
+  - slice
+- fill
+  - fill
+  - gradient
+- line
+  - line
+  - curve
+- shape
+  - rect (line)
+  - rect (fill)
+  - ellipse (line)
+  - ellipse (fill)
+- shape2
+  - contour
+  - polygon
+- blur
+  - blur
+  - jumble
+
+pyxel edit (handles complexities with menu radio buttons etc):
+- selection
+- wand
+- pen
+- eraser
+- rect
+- ellipse
+- fill
+- color replacer
+- dropper
+- tile placer
+- offset
+- anim frame range
+- anim frame mgr
+- pan
+- zoom
+- zoom-fit
+- max-center frame
+- undo
+- redo
+
+
 [EJ link](https://eloquentjavascript.net/19_paint.html)

@@ -84,7 +84,7 @@ function elt(type, props, ...children) {
    onclick: () => console.log("click dos"),
    type: "button",
    disabled: true
- }, "Log click numero dos"));
+ }, "Log click numero dos (disabbled)"));
 
  // draws each pixel as a 10x10 square
 const scale = 10;
@@ -190,7 +190,7 @@ class PixelEditor {
     this.dom = elt("div", {}, this.canvas.dom, elt("br"),
       // adds spaces between the controls' dom elements
       ...this.controls.reduce(
-        (a, c) => a.concat(" ", c.dom), [])
+        (a, c) => a.concat("_____", c.dom), [])
       );
   }
   syncState(state) {
