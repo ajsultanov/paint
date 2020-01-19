@@ -4,7 +4,12 @@
 ### things
 - canvas
 - context
--
+--
+- keyboard shortcuts
+- efficient updating
+- circles
+- lines
+- 
 
 ## features
 ##### basics to implement
