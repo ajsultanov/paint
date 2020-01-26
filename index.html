@@ -11,8 +11,8 @@
   </style>
 </head>
 <body>
-  <script src="app.js"></script>
-  <div></div>
+  <script src="paintApp.js"></script>
+  <div>a</div>
   <script>
     let state = {
       tool: "draw",
@@ -21,7 +21,7 @@
     };
     let app = new PixelEditor(state, {
       tools: {draw, fill, rectangle, pick},
-      controls: [ToolSelect, ColorSelect],
+      controls: [ToolSelect, ColorSelect, SaveButton, LoadButton],
       dispatch(action) {
         state = updateState(state, action);
         app.syncState(state);

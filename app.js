@@ -1,5 +1,7 @@
 console.log("hewwo");
 
+// const document = new Document();
+
 // application state is an object with picture, tool, and color properties
 /*
   state.picture
