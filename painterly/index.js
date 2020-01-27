@@ -29,7 +29,7 @@ function reducer(state, action) {
 		case 'DECREMENT':
 			return state;
 			break;
-		case 'SOMETHING_ELSE':
+		case 'ANOTHER_ACTION':
 			return state;
 			break;
 		default:
@@ -119,3 +119,23 @@ const draw = (() => {
 	// ctx.setTransform(a, b, c, d, e, f)
 	// ctx.transform(1, 0, 0.5, 1, 0, 0) // shear
 })();
+
+let lastX; // Tracks the last observed mouse X position
+  let bar = document.getElementById("resize");
+  bar.addEventListener("mousedown", event => {
+    if (event.button === 0) {
+      lastX = event.clientX;
+      window.addEventListener("mousemove", moved);
+      event.preventDefault(); // Prevent selection
+    }
+  });
+  function moved(event) {
+    if (event.buttons === 0) {
+      window.removeEventListener("mousemove", moved);
+    } else {
+      let dist = event.clientX - lastX;
+      let newWidth = Math.min(500, Math.max(10, bar.offsetWidth + dist));
+      bar.style.width = newWidth + "px";
+      lastX = event.clientX;
+    }
+  }
