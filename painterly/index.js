@@ -71,14 +71,14 @@ buttoo.addEventListener("click", clickonce)
 
 document.body.appendChild(newElement("div", {
 	className: "fancy-div",
-	style: "font-style: italic; background-color: #ffafef; width: 50%; height: 200px"
+	style: "font-style: italic; background-color: #ffafef; width: 50%; height: 200px; display:none"
 }, "~ Fancy Div ~"));
 
 document.body.appendChild(newElement("canvas", {
 	width: "480",
 	height: "360",
 	id: "canvasMan",
-	style: "border: 1px solid black"
+	style: "border: 1px solid black; display:none"
 }));
 const canvas = document.getElementById("canvasMan");
 const ctx = canvas.getContext("2d");

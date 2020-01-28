@@ -9,7 +9,7 @@
 - efficient updating
 - circles
 - lines
-- 
+-
 
 ## features
 ##### basics to implement
@@ -50,7 +50,8 @@
     - bad rgb input
 - aseprite
   - big chunky ui
-  - ...
+  - hex input is fucked
+  - awkward palette tools
 
 #### toolbars
 aseprite:
@@ -109,6 +110,7 @@ pyxel edit (handles complexities with menu radio buttons etc):
 - max-center frame
 - undo
 - redo
+- needed to update a thing here
 
 
 [EJ link](https://eloquentjavascript.net/19_paint.html)
