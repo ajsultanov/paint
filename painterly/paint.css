@@ -2,21 +2,21 @@
 #wrapper {
 	width: 100%;
 	height: 90vh;
-	background-color: #fefefd;
+	background-color: #ffe;
 
 	display: grid;
-	grid-template-columns: 50px 50px 50px 50px;
-	grid-template-rows: auto;
+	/* grid-template-columns: 50px 50px 1fr 1fr; */
+	/* grid-template-rows: auto; */
 	grid-template-areas:
-		"toolbar toolbar toolbar ."
+		"toolbar . toolbar toolbar"
+		"contextMenu contextMenu . item"
 }
 
 #toolbar {
-	grid-area: "toolbar";
+	grid-area: toolbar;
 	/* width: 100px;
 	height: 100px; */
-	background-color: #aa5555;
-	border: 1px solid black;
+	background-color: #d99;
 }
 
 .tool {
@@ -36,9 +36,122 @@
 }
 
 #contextMenu {
-
+	grid-area: contextMenu;
 }
 
 #canvas {
+	/* display: grid; */
+}
 
+.item {
+	background-color: #cdc;
+	grid-area: item;
+}
+
+.item-a {
+  grid-area: header;
+	background-color: sandybrown;
+}
+.item-b {
+  grid-area: main;
+	background-color: deepskyblue;
+	min-height: 10px;
+}
+.item-c {
+  grid-area: sidebar;
+	background-color: tomato;
+}
+.item-d {
+  grid-area: footer;
+	background-color: palegreen;
+}
+.item-e {
+  grid-area: footer2;
+	grid-row: 6 / 7;
+	grid-column: 2 / 3;
+	background-color: gold;
+}
+
+.container {
+	height: 400px;
+	width: 640px;
+
+  display: grid;
+	/* justify-items: center; */
+	/* why does this break the grid ??? */
+	/* align-items: center; */
+
+	justify-content: space-evenly;
+	/* align-content: stretch; */
+
+  grid-template-columns: 100px 125px 125px 125px 100px;
+  grid-template-rows: 100px auto 50px;
+  grid-template-areas:
+    "header header header header header"
+    "main main . . sidebar"
+    ". footer footer footer footer2";
+	/* gap: 10px; */
+	grid-auto-rows: 50px;
+	border: 1px solid black;
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: 60px 60px 60px 60px 60px;
+  grid-template-rows: 30px 30px;
+  grid-auto-flow: column;
+	gap: 5px;
+}
+.item-f {
+  grid-column: 1;
+  grid-row: 1 / 3;
+	background-color: sandybrown;
+}
+.item-g {
+background-color: deepskyblue;
+}
+.item-h {
+background-color: tomato;
+}
+.item-i {
+background-color: palegreen;
+}
+.item-j {
+  grid-column: 5;
+  grid-row: 1 / 3;
+	background-color: gold;
+}
+
+.container3 {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	grid-template-rows: 100px 200px;
+	border: 1px solid black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#conto {
+  display: grid;
+  grid-template-columns: repeat(4, [col-start] auto [col-end]);
+  grid-gap: 5px;
+  box-sizing: border-box;
+  /* height: 200px; */
+  /* width: 100%; */
+  background-color: #8cffa0;
+  padding: 10px;
+}
+
+#conto > div {
+  background-color: #8ca0ff;
+  padding: 5px;
 }

@@ -37,21 +37,22 @@
 
 #### that i dont like
 - pyxel edit
-  - tile tool
+  - tile tool:
     - hard to tell which tiles are saved from afar
     - moving mapped tiles impossible
-  - line tool
+  - line tool:
     - makes weird/unintuitive jaggies
-  - file handling
+  - file handling:
     - must import/export non-.pyxel files
     - no keyboard shortcuts
-  - color tools
+  - color tools:
     - no dedicated window thing
     - bad rgb input
 - aseprite
   - big chunky ui
   - hex input is fucked
   - awkward palette tools
+  - awkward, finicky selection handling
 
 #### toolbars
 aseprite:
