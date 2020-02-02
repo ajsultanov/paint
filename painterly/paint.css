@@ -5,43 +5,76 @@
 	background-color: #ffe;
 
 	display: grid;
-	/* grid-template-columns: 50px 50px 1fr 1fr; */
-	/* grid-template-rows: auto; */
-	grid-template-areas:
-		"toolbar . toolbar toolbar"
-		"contextMenu contextMenu . item"
+	grid-template-columns: [tool-start] 50px [tool-end canvas-start] 600px [canvas-end];
+	grid-template-rows: 50px 400px;
+	gap: 5px;
 }
 
 #toolbar {
 	grid-area: toolbar;
-	/* width: 100px;
-	height: 100px; */
+	grid-column: tool-start / tool-end;
+	grid-row: 1 / 3;
 	background-color: #d99;
+
+	display: grid;
+	grid-template-columns: 20px 20px;
+	grid-template-rows: 20px 20px;
+	grid-auto-flow: row;
+	gap: 5px;
 }
 
 .tool {
-
+	grid-area: tool;
+	background-color: #9dd;
 }
 
 #colorPalette {
-
+	grid-area: colorPalette;
 }
 
 #palette {
-
+	grid-area: palette;
 }
 
 #color {
-
+	grid-area: color;
 }
 
 #contextMenu {
 	grid-area: contextMenu;
+	grid-column: tool-end / canvas-end;
+	grid-row: 1 / 2;
+	background-color: #99d;
 }
 
 #canvas {
-	/* display: grid; */
+	grid-area: canvas;
+	grid-column: canvas-start / canvas-end;
+	grid-row: 2 / 3;
+	background-color: #9d9;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .item {
 	background-color: #cdc;
@@ -95,6 +128,15 @@
 	border: 1px solid black;
 }
 
+
+
+
+
+
+
+
+
+
 .container2 {
   display: grid;
   grid-template-columns: 60px 60px 60px 60px 60px;
@@ -129,20 +171,9 @@ background-color: palegreen;
 	border: 1px solid black;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 #conto {
   display: grid;
-  grid-template-columns: repeat(4, [col-start] auto [col-end]);
+  grid-template-columns: repeat(auto-fill, 10px [col-start] 30% [col-middle] 400px [col-end]);
   grid-gap: 5px;
   box-sizing: border-box;
   /* height: 200px; */
