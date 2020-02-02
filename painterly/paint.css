@@ -5,81 +5,105 @@
 	background-color: #ffe;
 
 	display: grid;
-	grid-template-columns: [tool-start] 50px [tool-end canvas-start] 600px [canvas-end];
-	grid-template-rows: 50px 400px;
+	grid-template-columns: [tool-start] 100px [tool-end canvas-start] 640px [canvas-end];
+	grid-template-rows: 40px 480px;
 	gap: 5px;
 }
 
 #toolbar {
-	grid-area: toolbar;
+	/* grid-area: toolbar; */
+	padding: 5px;
 	grid-column: tool-start / tool-end;
-	grid-row: 1 / 3;
-	background-color: #d99;
+	grid-row: 2 / 3;
+	background-color: #f88;
 
 	display: grid;
-	grid-template-columns: 20px 20px;
-	grid-template-rows: 20px 20px;
+	grid-template-columns: 100%;
+	grid-template-rows: 2fr 1fr;
+	gap: 5px;
+}
+
+.tool-wrapper {
+	/* grid-area: tool-wrapper; */
+	background-color: #ce6;
+
+	display: grid;
+	justify-content: space-between;
+	grid-template-columns: 1fr 1fr;
+	grid-auto-rows: 1fr;
 	grid-auto-flow: row;
 	gap: 5px;
 }
 
 .tool {
-	grid-area: tool;
-	background-color: #9dd;
+	/* grid-area: tool; */
+	background-color: #acc;
 }
 
 #colorPalette {
-	grid-area: colorPalette;
+	/* grid-area: colorPalette; */
+	background-color: #a6c;
+
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: minmax(auto, 100px) auto;
+	gap: 5px;
 }
 
 #palette {
-	grid-area: palette;
+	/* grid-area: palette; */
+	background-color: #ac6;
 }
 
 #color {
-	grid-area: color;
+	/* grid-area: color; */
+	background-color: #6ca;
 }
 
 #contextMenu {
-	grid-area: contextMenu;
-	grid-column: tool-end / canvas-end;
+	/* grid-area: contextMenu; */
+	grid-column: tool-start / canvas-end;
 	grid-row: 1 / 2;
-	background-color: #99d;
+	padding: 5px;
+	background-color: #6ac;
 }
 
 #canvas {
-	grid-area: canvas;
+	/* grid-area: canvas; */
 	grid-column: canvas-start / canvas-end;
 	grid-row: 2 / 3;
-	background-color: #9d9;
+	padding: 5px;
+	background-color: #aca;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .item {
-	background-color: #cdc;
 	grid-area: item;
+	background-color: #fff8;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .item-a {
   grid-area: header;
@@ -109,7 +133,7 @@
 	height: 400px;
 	width: 640px;
 
-  display: grid;
+  display: none;
 	/* justify-items: center; */
 	/* why does this break the grid ??? */
 	/* align-items: center; */
@@ -120,8 +144,8 @@
   grid-template-columns: 100px 125px 125px 125px 100px;
   grid-template-rows: 100px auto 50px;
   grid-template-areas:
-    "header header header header header"
-    "main main . . sidebar"
+    "main header header header header"
+    "main . . . sidebar"
     ". footer footer footer footer2";
 	/* gap: 10px; */
 	grid-auto-rows: 50px;
@@ -138,7 +162,7 @@
 
 
 .container2 {
-  display: grid;
+  display: none;
   grid-template-columns: 60px 60px 60px 60px 60px;
   grid-template-rows: 30px 30px;
   grid-auto-flow: column;
@@ -164,15 +188,27 @@ background-color: palegreen;
 	background-color: gold;
 }
 
+
+
+
+
 .container3 {
-	display: grid;
+	display: none;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	grid-template-rows: 100px 200px;
 	border: 1px solid black;
 }
 
+
+
+
+
+
+
+
+
 #conto {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(auto-fill, 10px [col-start] 30% [col-middle] 400px [col-end]);
   grid-gap: 5px;
   box-sizing: border-box;
