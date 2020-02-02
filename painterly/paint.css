@@ -37,6 +37,7 @@
 
 .tool {
 	/* grid-area: tool; */
+	padding: 5px;
 	background-color: #acc;
 }
 
@@ -52,11 +53,13 @@
 
 #palette {
 	/* grid-area: palette; */
+	padding: 5px;
 	background-color: #ac6;
 }
 
 #color {
 	/* grid-area: color; */
+	padding: 5px;
 	background-color: #6ca;
 }
 
@@ -78,6 +81,7 @@
 
 .item {
 	grid-area: item;
+	padding: 5px;
 	background-color: #fff8;
 }
 
