@@ -46,22 +46,65 @@ class Picture {
 
 // make a controlled input with SCALE(zoom) variable
 
-const scale = 16;
-
+const scale = 15;
 const canvas = document.createElement('canvas');
-canvas.width = canvasDiv.clientWidth - 10;
-canvas.height = canvasDiv.clientHeight - 10;
 const ctx = canvas.getContext('2d');
+// canvas.width = canvasDiv.clientWidth - 10;
+// canvas.height = canvasDiv.clientHeight - 10;
+canvas.setAttribute('onclick', onMouseDown)				// <-- this doesnt work
 canvasDiv.appendChild(canvas);
 
-let hex = ['00', '11', '22', '33',
-					 '44', '55', '66', '77',
-					 '88', '99', 'AA', 'BB',
-					 'CC', 'DD', 'EE', 'FF']
-
-for (let y = 0; y < 30; y++) {
-	for (let x = 0; x < 40; x++) {
-		ctx.fillStyle = '#' + hex[x] + hex[x+y] + hex[y];
-		ctx.fillRect(x * scale, y * scale, scale, scale);
-	}
+function onMouseDown(e) {												 // <-- this doesnt work
+	console.log(canvas);
 }
+
+
+// this component has two responsibilities: 1.displaying the picture as a grid of colored boxes and 2.communicating pointer events from this picture
+// cannot directly dispatch actions as it does not know the whole application state, only the current picture
+class PictureCanvas {
+  constructor(picture, pointerDown) {
+    this.syncState(picture);
+  }
+  syncState(picture) {
+    if (this.picture == picture) return;
+    // only redraws when given a new picture
+    this.picture = picture;
+    drawPicture(this.picture, canvas, scale);
+  }
+}
+
+function drawPicture(picture, canvas, scale) {
+  canvas.width = picture.width * scale;
+  canvas.height = picture.height * scale;
+  // CanvasRenderingContext2D
+  let cx = canvas.getContext('2d');
+
+  for (let y = 0; y < picture.height; y++) {
+    for (let x = 0; x < picture.width; x++) {
+      cx.fillStyle = picture.pixel(x, y);
+      cx.fillRect(x * scale, y * scale, scale, scale);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+// let hex = ['00', '11', '22', '33',
+// 					 '44', '55', '66', '77',
+// 					 '88', '99', 'AA', 'BB',
+// 					 'CC', 'DD', 'EE', 'FF']
+// // fun!
+// for (let y = 0; y < 30; y++) {
+// 	for (let x = 0; x < 40; x++) {
+// 		ctx.fillStyle = '#' +
+// 		hex[Math.floor(Math.random() * (15 - 1) + 1)] +
+// 		hex[Math.floor(Math.random() * (15 - 3) + 3)] +
+// 		hex[Math.floor(Math.random() * (15 - 5) + 5)];
+// 		ctx.fillRect(x * scale, y * scale, scale, scale);
+// 	}
+// }
