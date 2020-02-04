@@ -15,14 +15,18 @@
 ##### basics to implement
 - save/load
 - undo
+  - take previous state and create a new object that contains just the differences between the old state and new state? so not storing entire state in memory for each history step
 - eraser/alpha brush
 - grid
+  - overlap with cells or gap?
 - zoom
   - 25% - 400% ~~?
 - select
-  - rect
+  - rectangle
   - lasso
   - wand
+  - SUPER WAND! cross between wand and lasso
+    - select color, moving selects only that overlap with that color/interconnected cells of that color, or a range of color
 
 #### from other programs i like
 - pyxel edit
