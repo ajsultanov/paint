@@ -5,8 +5,8 @@
 	background-color: #ffe;
 
 	display: grid;
-	grid-template-columns: [tool-start] 100px [tool-end canvas-start] 640px [canvas-end];
-	grid-template-rows: 40px 480px;
+	grid-template-columns: [tool-start] minmax(100px, 1fr) [tool-end canvas-start] minmax(640px, 800px) [canvas-end];
+	grid-template-rows: 40px 480px 40px;
 	gap: 5px;
 }
 
@@ -25,6 +25,7 @@
 
 .tool-wrapper {
 	/* grid-area: tool-wrapper; */
+	padding: 5px;
 	background-color: #ce6;
 
 	display: grid;
@@ -36,32 +37,83 @@
 }
 
 .tool {
-	/* grid-area: tool; */
 	padding: 5px;
 	background-color: #acc;
 }
 
 #colorPalette {
-	/* grid-area: colorPalette; */
 	background-color: #a6c;
 
 	display: grid;
-	grid-template-columns: auto;
-	grid-template-rows: minmax(auto, 100px) auto;
+	grid-template-columns: 1fr;
+	grid-template-rows: 100px 200px;
 	gap: 5px;
-}
-
-#palette {
-	/* grid-area: palette; */
-	padding: 5px;
-	background-color: #ac6;
+	justify-content: center;
 }
 
 #color {
-	/* grid-area: color; */
 	padding: 5px;
 	background-color: #6ca;
+	min-width: 80px;
+	max-width: 100px;
+
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 50% 50%;
 }
+#color-1 {
+	padding: 5px;
+	background-color: #FF8800;
+	grid-area: 1 / 1 / 3 / 3;
+	z-index: 1;
+}
+#color-2 {
+	padding: 5px;
+	background-color: #00FFFF;
+	grid-area: 2 / 2 / 3 / 3;
+	z-index: 10;
+	box-shadow: -3px -3px 10px #0008;
+}
+
+:root {
+	--width: 40px;
+	/* var(--width) */
+}
+#palette {
+	padding: 5px;
+	background-color: #ac6;
+	min-width: 90px;
+
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 30px);
+	grid-template-rows: repeat(auto-fit, 30px);
+	/* change max to 60px, height of cells becomes split btw 39 and 22 ?? */
+
+}
+.pal-color {
+	padding: 5px;
+	box-shadow: 1px 1px 5px #0008;
+}
+.red {
+	background-color: #4008;
+}
+.blue {
+	background-color: #0088;
+}
+.green {
+	background-color: #0308;
+}
+.yellow {
+	background-color: #4308;
+}
+.pink {
+	background-color: #4088;
+}
+.cyan {
+	background-color: #0888;
+}
+
+
 
 #contextMenu {
 	/* grid-area: contextMenu; */
@@ -77,6 +129,14 @@
 	grid-row: 2 / 3;
 	padding: 5px;
 	background-color: #aca;
+	border: 1px solid black;
+}
+
+#infoBar {
+grid-column: tool-start / canvas-end;
+grid-row: 3 / 4;
+padding: 5px;
+background-color: #888;
 }
 
 .item {
@@ -94,20 +154,34 @@
 
 
 
+hr {
+margin-top: 100px;
+margin-bottom: 100px;
+}
 
+.container {
+	height: 400px;
+	width: 640px;
 
+  display: grid;
+	/* justify-items: center; */
+	/* why does this break the grid ??? */
+	/* align-items: center; */
 
+	justify-content: space-evenly;
+	align-content: space-evenly;
 
-
-
-
-
-
-
-
-
-
-
+  grid-template-columns: 100px 125px 125px 125px 100px;
+  grid-template-rows: 100px auto 50px;
+  grid-template-areas:
+    "main header header header header"
+    "main . . . sidebar"
+    ". footer footer footer footer2";
+	/* gap: 10px; */
+	grid-auto-columns: 50px;
+	grid-auto-rows: 50px;
+	border: 1px solid black;
+}
 
 .item-a {
   grid-area: header;
@@ -128,101 +202,7 @@
 }
 .item-e {
   grid-area: footer2;
-	grid-row: 6 / 7;
-	grid-column: 2 / 3;
+	grid-row: 5 / 7;
+	grid-column: 1 / 4;
 	background-color: gold;
-}
-
-.container {
-	height: 400px;
-	width: 640px;
-
-  display: none;
-	/* justify-items: center; */
-	/* why does this break the grid ??? */
-	/* align-items: center; */
-
-	justify-content: space-evenly;
-	/* align-content: stretch; */
-
-  grid-template-columns: 100px 125px 125px 125px 100px;
-  grid-template-rows: 100px auto 50px;
-  grid-template-areas:
-    "main header header header header"
-    "main . . . sidebar"
-    ". footer footer footer footer2";
-	/* gap: 10px; */
-	grid-auto-rows: 50px;
-	border: 1px solid black;
-}
-
-
-
-
-
-
-
-
-
-
-.container2 {
-  display: none;
-  grid-template-columns: 60px 60px 60px 60px 60px;
-  grid-template-rows: 30px 30px;
-  grid-auto-flow: column;
-	gap: 5px;
-}
-.item-f {
-  grid-column: 1;
-  grid-row: 1 / 3;
-	background-color: sandybrown;
-}
-.item-g {
-background-color: deepskyblue;
-}
-.item-h {
-background-color: tomato;
-}
-.item-i {
-background-color: palegreen;
-}
-.item-j {
-  grid-column: 5;
-  grid-row: 1 / 3;
-	background-color: gold;
-}
-
-
-
-
-
-.container3 {
-	display: none;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	grid-template-rows: 100px 200px;
-	border: 1px solid black;
-}
-
-
-
-
-
-
-
-
-
-#conto {
-  display: none;
-  grid-template-columns: repeat(auto-fill, 10px [col-start] 30% [col-middle] 400px [col-end]);
-  grid-gap: 5px;
-  box-sizing: border-box;
-  /* height: 200px; */
-  /* width: 100%; */
-  background-color: #8cffa0;
-  padding: 10px;
-}
-
-#conto > div {
-  background-color: #8ca0ff;
-  padding: 5px;
 }
