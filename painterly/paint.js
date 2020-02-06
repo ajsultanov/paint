@@ -141,18 +141,19 @@ function drawPicture(picture, canvas, scale) {
 }
 
 function drawPixel(e) {
-	let coordX = Math.floor(e.offsetX || (mousePos.x - canvasPos.x)/scale);
-	let coordY = Math.floor(e.offsetY || (mousePos.y - canvasPos.y)/scale);
+	let coordX = Math.floor((e.offsetX || mousePos.x - canvasPos.x)/scale);
+	let coordY = Math.floor((e.offsetY || mousePos.y - canvasPos.y)/scale);
 	let pixelIndex = screenPicture.width * coordY + coordX
 	let pixelInQuestion = screenPicture.pixels[pixelIndex]
 
-		// console.clear();
-		console.log(e.offsetX, mousePos.x - canvasPos.x);
 		// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
 		// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
+		console.log(pixelInQuestion);
+
+	activeColor = "#" + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16);
 
 	if (pixelInQuestion === "#FFFFFF") {
-		screenPicture.pixels[pixelIndex] = "#000000";
+		screenPicture.pixels[pixelIndex] = activeColor;
 	} else {
 		screenPicture.pixels[pixelIndex] = "#FFFFFF";
 	}
@@ -164,7 +165,7 @@ let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 drawPicture(screenPicture, canvas, scale);
 
 
-
+let activeColor = "#000000"
 
 
 
