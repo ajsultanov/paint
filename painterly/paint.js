@@ -5,6 +5,7 @@ const palette = colorPalette.querySelector('#palette')
 const tools = toolbar.querySelectorAll('.tool')
 const contextMenu = document.querySelector('#contextMenu');
 const canvasDiv = document.querySelector('#canvas')
+const scaleInput = document.querySelector('#scale')
 
 console.dir(toolbar);
 console.dir(colorPalette);
@@ -13,6 +14,7 @@ console.dir(palette);
 console.dir(tools);
 console.dir(contextMenu);
 console.dir(canvasDiv);
+console.dir(scaleInput);
 
 class Picture {
   constructor(width, height, pixels) {
@@ -44,19 +46,27 @@ class Picture {
   }
 }
 
-// make a controlled input with SCALE(zoom) variable
 
-const scale = 15;
+let scale = 15;
+const scaleChange = e => {
+	console.log("OK", e.target);
+	scale = e.target.value;
+	// would normally dispatch a thing...
+	// then have input derive value from state
+}
+scaleInput.addEventListener('change', scaleChange)
+
+
+
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 // canvas.width = canvasDiv.clientWidth - 10;
 // canvas.height = canvasDiv.clientHeight - 10;
 canvas.setAttribute('onclick', onMouseDown)				// <-- this doesnt work
+// canvas.onClick = onMouseDown;
 canvasDiv.appendChild(canvas);
+console.log(canvas);
 
-function onMouseDown(e) {												 // <-- this doesnt work
-	console.log(canvas);
-}
 
 
 // this component has two responsibilities: 1.displaying the picture as a grid of colored boxes and 2.communicating pointer events from this picture
