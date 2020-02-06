@@ -11,7 +11,6 @@ const scaleRange = document.querySelector('#scaleRange')
 let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
-let screenPicture = {}
 
 console.dir(toolbar);
 console.dir(colorPalette);
@@ -90,7 +89,26 @@ const ctx = canvas.getContext('2d');
 // canvas.width = canvasDiv.clientWidth - 10;
 // canvas.height = canvasDiv.clientHeight - 10;
 canvasDiv.appendChild(canvas);
-canvas.addEventListener('click', drawPixel)
+const canvasPos = {x:0, y:0};
+canvasPos.x = canvas.getBoundingClientRect().x;
+canvasPos.y = canvas.getBoundingClientRect().y;
+
+let mousePos = {x:0, y:0};
+function mouseMovin(e) {
+	mousePos.x = e.clientX;
+	mousePos.y = e.clientY;
+}
+document.addEventListener('mousemove', mouseMovin)
+
+
+
+canvas.addEventListener('mousedown', drawPixel)
+document.addEventListener('keydown', drawPixel)
+
+
+
+
+
 console.log(canvas);
 
 
@@ -123,14 +141,27 @@ function drawPicture(picture, canvas, scale) {
 }
 
 function drawPixel(e) {
-	let coordX = Math.floor(e.offsetX/scale);
-	let coordY = Math.floor(e.offsetY/scale);
-	console.log(coordX, coordY);
-	screenPicture.pixels[screenPicture.width * coordY + coordX] = '#000000';
+	let coordX = Math.floor(e.offsetX || (mousePos.x - canvasPos.x)/scale);
+	let coordY = Math.floor(e.offsetY || (mousePos.y - canvasPos.y)/scale);
+	let pixelIndex = screenPicture.width * coordY + coordX
+	let pixelInQuestion = screenPicture.pixels[pixelIndex]
+
+		// console.clear();
+		console.log(e.offsetX, mousePos.x - canvasPos.x);
+		// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
+		// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
+
+	if (pixelInQuestion === "#FFFFFF") {
+		screenPicture.pixels[pixelIndex] = "#000000";
+	} else {
+		screenPicture.pixels[pixelIndex] = "#FFFFFF";
+	}
 	drawPicture(screenPicture, canvas, scale);
 }
 
 
+let screenPicture = Picture.empty(24, 16, "#FFFFFF")
+drawPicture(screenPicture, canvas, scale);
 
 
 
