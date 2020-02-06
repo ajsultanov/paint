@@ -5,7 +5,11 @@ const palette = colorPalette.querySelector('#palette')
 const tools = toolbar.querySelectorAll('.tool')
 const contextMenu = document.querySelector('#contextMenu');
 const canvasDiv = document.querySelector('#canvas')
+const createForm = document.querySelector('#create')
 const scaleInput = document.querySelector('#scale')
+let scale = 15;
+scaleInput.value = scale;
+let screenPicture = {}
 
 console.dir(toolbar);
 console.dir(colorPalette);
@@ -14,6 +18,7 @@ console.dir(palette);
 console.dir(tools);
 console.dir(contextMenu);
 console.dir(canvasDiv);
+console.dir(createForm);
 console.dir(scaleInput);
 
 class Picture {
@@ -47,23 +52,31 @@ class Picture {
 }
 
 
-let scale = 15;
+const createCanvas = e => {
+	e.preventDefault();
+	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
+	screenPicture = pic;
+	console.log(pic);
+	drawPicture(pic, canvas, scale)
+}
+createForm.addEventListener('submit', createCanvas)
+
+
+
 const scaleChange = e => {
-	console.log("OK", e.target);
 	scale = e.target.value;
 	// would normally dispatch a thing...
 	// then have input derive value from state
+	console.log(scale);
+	drawPicture(screenPicture, canvas, scale)
 }
 scaleInput.addEventListener('change', scaleChange)
-
 
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 // canvas.width = canvasDiv.clientWidth - 10;
-// canvas.height = canvasDiv.clientHeight - 10;
-canvas.setAttribute('onclick', onMouseDown)				// <-- this doesnt work
-// canvas.onClick = onMouseDown;
+// canvas.height = canvasDiv.clientHeight - 10;q
 canvasDiv.appendChild(canvas);
 console.log(canvas);
 
