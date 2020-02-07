@@ -12,69 +12,24 @@ const paletteColors = Array.from(document.querySelectorAll('.pal-color'));
 const optPaletteColors = Array.from(document.querySelectorAll('.pal-color.opt'));
 const tools = toolbar.querySelectorAll('.tool');
 const canvasDiv = document.querySelector('#canvas');
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+const canvasPos = {x:0, y:0, width:0, height:0};
+canvasDiv.appendChild(canvas);
 
-let scale = 15;
-scaleInput.value = scale;
-scaleRange.value = scale;
-
-function windowResize() {
-	paletteRefresh();
-	canvasRefresh();
-}
-function paletteRefresh() {
-	if (palette.offsetWidth < 130) {
-		for (let color of optPaletteColors) {
-			color.style.display = 'none';
-		}
-	} else {
-		for (let color of optPaletteColors) {
-			color.style.display = 'inline';
-		}
-	}
-}
-paletteRefresh()
-window.addEventListener('resize', windowResize)
-
-function brtCheck(color) {
-	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
-	return brt > 200 ? 1 : 0;
-}
-
-for (let color of paletteColors) {
-	color.style.backgroundColor = `#${color.id}`;
-	if (brtCheck(color.id)) {
-		color.style.color = "#0004";
-	} else {
-		color.style.color = "#fff4";
-	}
-}
-
-palette.addEventListener('click', setColor)
-palette.addEventListener('contextmenu', setColor)
-function setColor(e) {
-	if (e.target.id === "palette") { return; }
-
-
-	if (e.button === 0 ){
-		activeColor = `#${e.target.id}`;
-		primColor.style.backgroundColor = activeColor;
-		if (brtCheck(e.target.id)) {
-			primColor.style.color = "#0008";
-		} else {
-			primColor.style.color = "#fff8";
-		}
-	} else if (e.button === 2) {
-		e.preventDefault()
-		secColor.style.backgroundColor = `#${e.target.id}`;
-		if (brtCheck(e.target.id)) {
-			secColor.style.color = "#0008";
-		} else {
-			secColor.style.color = "#fff8";
-		}
-	}
-	console.log(`%cactive color: %c${activeColor.slice(1)}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
-	return false;
-}
+// let arr1 = [1,2,3], arr2 = [4,5,6]
+//
+// let arr3 = [...arr1]
+// arr1.pop() 	//--> 3
+// arr1 				//--> [1,2]
+// arr3 				//--> [1,2,3]
+//
+// let [...arr4] = arr2
+// arr2.pop() 	//--> 6
+// arr2 				//--> [4,5]
+// arr4 				//--> [4,5,6]
+//
+// ? ?? ??? huh ??? ?? ?
 
 class Picture {
   constructor(width, height, pixels) {
@@ -104,13 +59,88 @@ class Picture {
     return new Picture(this.width, this.height, copy);
   }
 }
+let scale = 15;
+scaleInput.value = scale;
+scaleRange.value = scale;
+let screenPicture = Picture.empty(24, 16, "#FFFFFF")
+drawPicture(screenPicture, canvas, scale);
+
+
+function windowResize() {
+	paletteRefresh();
+	canvasRefresh();
+}
+function paletteRefresh() {
+	if (palette.offsetWidth < 130) {
+		for (let color of optPaletteColors) {
+			color.style.display = 'none';
+		}
+	} else {
+		for (let color of optPaletteColors) {
+			color.style.display = 'inline';
+		}
+	}
+}
+function canvasRefresh() {
+	canvasPos.x = canvas.getBoundingClientRect().x;
+	canvasPos.y = canvas.getBoundingClientRect().y;
+	canvasPos.width = canvas.getBoundingClientRect().width;
+	canvasPos.height = canvas.getBoundingClientRect().height;
+}
+paletteRefresh()
+canvasRefresh()
+window.addEventListener('resize', windowResize)
+
+function brtCheck(color) {
+	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
+	return brt > 200 ? 1 : 0;
+}
+
+for (let color of paletteColors) {
+	color.style.backgroundColor = `#${color.id}`;
+	if (brtCheck(color.id)) {
+		color.style.color = "#0004";
+	} else {
+		color.style.color = "#fff4";
+	}
+}
+
+function setColor(e) {
+	if (e.target.id === "palette") { return };
+
+	if (e.button === 0 ){
+		activeColor = `#${e.target.id}`;
+		primColor.style.backgroundColor = activeColor;
+		if (brtCheck(e.target.id)) {
+			primColor.style.color = "#0008";
+		} else {
+			primColor.style.color = "#fff8";
+		}
+	} else if (e.button === 2) {
+		e.preventDefault()
+		secColor.style.backgroundColor = `#${e.target.id}`;
+		if (brtCheck(e.target.id)) {
+			secColor.style.color = "#0008";
+		} else {
+			secColor.style.color = "#fff8";
+		}
+	}
+	console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+	return false;		// disables context menu from actually appearing
+}
+palette.addEventListener('click', setColor)
+palette.addEventListener('contextmenu', setColor) // right click
+
 
 const createCanvas = e => {
 	e.preventDefault();
+	if (document.activeElement.id === 'scale') { return };
 	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
 	screenPicture = pic;
 	console.log(pic);
 	drawPicture(pic, canvas, scale)
+	activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+	console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 }
 createForm.addEventListener('submit', createCanvas)
 
@@ -118,28 +148,13 @@ const scaleChange = e => {
 	scale = e.target.value;
 	scaleInput.value = scale;
 	scaleRange.value = scale;
-	// would normally dispatch a thing...
-	// then have input derive value from state
 	console.log(`%cscale: ${scale}x`, `font-size:${scale/1.5+5}px;`, );
 	drawPicture(screenPicture, canvas, scale)
 }
 scaleInput.addEventListener('change', scaleChange)
 scaleRange.addEventListener('change', scaleChange)
 
-
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-canvasDiv.appendChild(canvas);
-const canvasPos = {x:0, y:0, width:0, height:0};
-
-
-function canvasRefresh() {
-	canvasPos.x = canvas.getBoundingClientRect().x;
-	canvasPos.y = canvas.getBoundingClientRect().y;
-	canvasPos.width = canvas.getBoundingClientRect().width;
-	canvasPos.height = canvas.getBoundingClientRect().height;
-}
-canvasRefresh()
+let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 
 let mousePos = {x:0, y:0};
 function mouseMovin(e) {
@@ -147,38 +162,25 @@ function mouseMovin(e) {
 	mousePos.y = e.clientY;
 }
 document.addEventListener('mousemove', mouseMovin);
-
-
 canvas.addEventListener('mousedown', drawPixel);
 
 let key = null;
+let keyInput = e => {
+	console.log(this);
+	key = e.key;
+
+	switch (e.key) {
+		case 'w':
+			e => drawpixel(e);
+			break;
+		default: null;
+	}
+}
 document.addEventListener('keydown', e => {
-	// makes it so same key cant be pressed twice in a row
-	// need to reset on keyup
-	if (e.key !== key) { drawPixel(e) };
+	if (e.key !== key) { keyInput(e) };
 });
-// document.addEventListener('keydown', drawPixel)
-document.addEventListener('keyup', e => key = null);
+document.addEventListener('keyup', () => key = null);
 
-
-
-
-// console.log(canvas);
-
-
-// this component has two responsibilities: 1.displaying the picture as a grid of colored boxes and 2.communicating pointer events from this picture
-// cannot directly dispatch actions as it does not know the whole application state, only the current picture
-// class PictureCanvas {
-//   constructor(picture, pointerDown) {
-//     this.syncState(picture);
-//   }
-//   syncState(picture) {
-//     if (this.picture == picture) return;
-//     // only redraws when given a new picture
-//     this.picture = picture;
-//     drawPicture(this.picture, canvas, scale);
-//   }
-// }
 
 function drawPicture(picture, canvas, scale) {
   canvas.width = picture.width * scale;
@@ -195,7 +197,7 @@ function drawPicture(picture, canvas, scale) {
 }
 
 function drawPixel(e) {
-	if (e.type === "keydown") { key = e.key };
+	// if (e.type === "keydown") { key = e.key };
 // 												get mouseEvent coordinate
 // 												OR
 //												for keyboardEvent:
@@ -223,20 +225,9 @@ function drawPixel(e) {
 	let pixelIndex = screenPicture.width * coordY + coordX
 	let pixelInQuestion = screenPicture.pixels[pixelIndex]
 
-	// console.log(e);
 	console.log(
 		`${mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x}\t/ ${scale} =\t${coordX},\n${mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y}\t/ ${scale} =\t${coordY}`);
-	console.log(`x:${coordX} + y:(${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
-
-	// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
-	// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
-	// console.log(pixelInQuestion);
-
-	// activeColor = "#" + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16);
-
-	if (activeColor === null) {
-		activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
-	}
+	console.log(`x:${coordX} + y:${coordY * screenPicture.width} (${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
 
 	if (pixelInQuestion === "#FFFFFF") {
 		screenPicture.pixels[pixelIndex] = activeColor;
@@ -244,16 +235,13 @@ function drawPixel(e) {
 		screenPicture.pixels[pixelIndex] = "#FFFFFF";
 	}
 	drawPicture(screenPicture, canvas, scale);
-
-	console.log(activeColor);
 }
 
 
-let screenPicture = Picture.empty(24, 16, "#FFFFFF")
-drawPicture(screenPicture, canvas, scale);
 
 
-let activeColor = null;
+
+
 let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
 let a = [], b = [], c = [];
 colorArr.forEach(x => {
