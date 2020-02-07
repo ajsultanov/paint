@@ -32,7 +32,7 @@ console.dir(scaleRange);
 
 class Picture {
   constructor(width, height, pixels) {
-    console.log("picture");
+    // console.log("picture");
     this.width = width;
     this.height = height;
     this.pixels = pixels;
@@ -86,30 +86,36 @@ scaleRange.addEventListener('change', scaleChange)
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
-// canvas.width = canvasDiv.clientWidth - 10;
-// canvas.height = canvasDiv.clientHeight - 10;
 canvasDiv.appendChild(canvas);
-const canvasPos = {x:0, y:0};
+const canvasPos = {x:0, y:0, width:0, height:0};
 canvasPos.x = canvas.getBoundingClientRect().x;
 canvasPos.y = canvas.getBoundingClientRect().y;
+canvasPos.width = canvas.getBoundingClientRect().width;
+canvasPos.height = canvas.getBoundingClientRect().height;
 
 let mousePos = {x:0, y:0};
 function mouseMovin(e) {
 	mousePos.x = e.clientX;
 	mousePos.y = e.clientY;
 }
-document.addEventListener('mousemove', mouseMovin)
+document.addEventListener('mousemove', mouseMovin);
+
+
+canvas.addEventListener('mousedown', drawPixel);
+
+let key = null;
+document.addEventListener('keydown', e => {
+	// makes it so same key cant be pressed twice in a row
+	// need to reset on keyup
+	if (e.key !== key) { drawPixel(e) };
+});
+// document.addEventListener('keydown', drawPixel)
+document.addEventListener('keyup', e => key = null);
 
 
 
-canvas.addEventListener('mousedown', drawPixel)
-document.addEventListener('keydown', drawPixel)
 
-
-
-
-
-console.log(canvas);
+// console.log(canvas);
 
 
 // this component has two responsibilities: 1.displaying the picture as a grid of colored boxes and 2.communicating pointer events from this picture
@@ -141,16 +147,37 @@ function drawPicture(picture, canvas, scale) {
 }
 
 function drawPixel(e) {
-	let coordX = Math.floor((e.offsetX || mousePos.x - canvasPos.x)/scale);
-	let coordY = Math.floor((e.offsetY || mousePos.y - canvasPos.y)/scale);
+	if (e.type === "keydown") { key = e.key };
+// 												get mouseEvent coordinate
+// 												OR
+//   		*		*									client position of mouse
+// 			\__/								+ amount of canvas element scroll
+//													+ amount of window scroll
+// 													- canvas element position
+//												i havent thought this through immensely but it works
+
+	let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
+
+	// makes it so a coordX value above the width doesnt simply go down to the next line
+	if (coordX >= screenPicture.width) {
+		return;
+	}
+	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
+
 	let pixelIndex = screenPicture.width * coordY + coordX
 	let pixelInQuestion = screenPicture.pixels[pixelIndex]
 
-		// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
-		// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
-		console.log(pixelInQuestion);
+	// console.log(e);
+	console.log(mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x);
 
-	activeColor = "#" + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16);
+	// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
+	// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
+	console.log(pixelInQuestion);
+
+	// activeColor = "#" + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16);
+
+	activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+
 
 	if (pixelInQuestion === "#FFFFFF") {
 		screenPicture.pixels[pixelIndex] = activeColor;
@@ -165,8 +192,19 @@ let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 drawPicture(screenPicture, canvas, scale);
 
 
-let activeColor = "#000000"
+let activeColor = "#000000";
+let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
+let a = [], b = [], c = [];
+colorArr.forEach(x => {
+	a.push(parseInt(x[0], 16));
+	b.push(parseInt(x[1], 16));
+	c.push(parseInt(x[2], 16));
+})
 
+console.log(colorArr);
+// console.log(Math.round(a.reduce((a = 0, c) => a += c)/64));
+// console.log(Math.round(b.reduce((a = 0, c) => a += c)/64));
+// console.log(Math.round(c.reduce((a = 0, c) => a += c)/64));
 
 
 // let hex = ['00', '11', '22', '33',

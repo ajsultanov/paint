@@ -9,7 +9,7 @@
 - efficient updating
 - circles
 - lines
--
+- Math.random() * (max - min) + min;
 
 ## features
 ##### basics to implement

@@ -42,12 +42,11 @@ body {
 
 .tool {
 	padding: 5px;
-	background-color: #acc;
-	border-top: 2px solid #dee;
-	border-right: 2px solid #ddc;
-	border-bottom: 2px solid #aa9;
-	border-left: 2px solid #bcc;
-	border-style: outset;
+	background-color: #acb;
+	border-top: 3px solid #fff;
+	border-left: 3px solid #aaa;
+	border-right: 3px solid #555;
+	border-bottom: 3px solid #000;
 }
 
 #colorPalette {
