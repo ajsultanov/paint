@@ -5,53 +5,61 @@ const scaleRange = document.querySelector('#scaleRange');
 const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
 const color = colorPalette.querySelector('#color');
+const primColor = color.querySelector('#color-1')
 const palette = colorPalette.querySelector('#palette');
 const paletteColors = Array.from(document.querySelectorAll('.pal-color'));
+const optPaletteColors = Array.from(document.querySelectorAll('.pal-color.opt'));
+console.log(optPaletteColors);
 const tools = toolbar.querySelectorAll('.tool');
 const canvasDiv = document.querySelector('#canvas');
-
-for (let color of paletteColors) {
-	color.style.backgroundColor = `#${color.id}`;
-	let brt = Number.parseInt(color.id.slice(0, 2), 16) + Number.parseInt(color.id.slice(2, 4), 16) + Number.parseInt(color.id.slice(4, 6), 16);
-	if (brt < 200) {
-		color.style.color = "#fff4";
-	} else {
-		color.style.color = "#0004";
-	}
-}
-
-palette.addEventListener('click', setColor)
-function setColor(e) {
-	activeColor = `#${e.target.id}`
-	console.log(`%cactive color: %c${activeColor.slice(1)}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
-}
 
 let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
 
-console.dir(toolbar);
-console.dir(colorPalette);
-console.dir(color);
-console.dir(palette);
-console.dir(tools);
-console.dir(contextMenu);
-console.dir(canvasDiv);
-console.dir(createForm);
-console.dir(scaleInput);
-console.dir(scaleRange);
-console.dir(paletteColors);
+function paletteRefresh() {
+	if (palette.offsetWidth < 130) {
+		for (let color of optPaletteColors) {
+			color.style.display = 'none';
+		}
+	} else {
+		for (let color of optPaletteColors) {
+			color.style.display = 'inline';
+		}
+	}
+}
+paletteRefresh()
+window.addEventListener('resize', paletteRefresh)
 
-// const state = {
-// 	picture: {w, h, [pix]},
-// 	tool: t,
-//	color: c,
-// 	...?
-// }
+function brtCheck(color) {
+	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
+	return brt > 200 ? 1 : 0;
+}
+
+for (let color of paletteColors) {
+	color.style.backgroundColor = `#${color.id}`;
+	if (brtCheck(color.id)) {
+		color.style.color = "#0004";
+	} else {
+		color.style.color = "#fff4";
+	}
+}
+
+palette.addEventListener('click', setColor)
+function setColor(e) {
+	activeColor = `#${e.target.id}`;
+	primColor.style.backgroundColor = activeColor;
+	if (brtCheck(e.target.id)) {
+		color.style.color = "#0008";
+	} else {
+		color.style.color = "#fff8";
+	}
+	console.log(`%cactive color: %c${activeColor.slice(1)}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+}
+
 
 class Picture {
   constructor(width, height, pixels) {
-    // console.log("picture");
     this.width = width;
     this.height = height;
     this.pixels = pixels;
@@ -79,7 +87,6 @@ class Picture {
   }
 }
 
-
 const createCanvas = e => {
 	e.preventDefault();
 	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
@@ -89,14 +96,13 @@ const createCanvas = e => {
 }
 createForm.addEventListener('submit', createCanvas)
 
-
 const scaleChange = e => {
 	scale = e.target.value;
 	scaleInput.value = scale;
 	scaleRange.value = scale;
 	// would normally dispatch a thing...
 	// then have input derive value from state
-	console.log(`%cscale: ${scale}`, "font-size:18px;", );
+	console.log(`%cscale: ${scale}x`, `font-size:${scale/1.5+5}px;`, );
 	drawPicture(screenPicture, canvas, scale)
 }
 scaleInput.addEventListener('change', scaleChange)
