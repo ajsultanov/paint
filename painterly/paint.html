@@ -5,9 +5,10 @@
   <title>Vanilla Paint</title>
   <meta name="description" content="Pixel Art Editor">
 	<link rel="stylesheet" href="paint.css">
+	<link rel="icon" type="image/png" href="./paintfav.png">
   <style media="screen">
     html {
-      /* background-color: #cde; */
+      /* background-color: #cce; */
     }
   </style>
 </head>
@@ -22,6 +23,7 @@
     <label for="height">Height</label>
     <input type="number" name="height" value="16" id="height">
     <input type="submit" name="create" value="New Canvas">
+
     <label for="scale">Scale (Zoom)</label>
     <input type="number" name="scale" value="10" id="scale">
     <input type="range" name="scaleRange" value="10" id="scaleRange" min="1" max="64">
@@ -98,10 +100,8 @@
 	</div>
 
 
-
+<!-- grid experiment stuff
   <hr />
-
-
 
   <div class="container">
     <div class="item-a">
@@ -135,6 +135,7 @@
       5 sidebar
     </div>
   </div>
+-->
 
 
 	<script src="paint.js"></script>

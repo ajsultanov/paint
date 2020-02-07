@@ -155,6 +155,7 @@ scaleInput.addEventListener('change', scaleChange)
 scaleRange.addEventListener('change', scaleChange)
 
 let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 
 let mousePos = {x:0, y:0};
 function mouseMovin(e) {
@@ -241,21 +242,21 @@ function drawPixel(e) {
 
 
 
-
-let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
-let a = [], b = [], c = [];
-colorArr.forEach(x => {
-	a.push(parseInt(x[0], 16));
-	b.push(parseInt(x[1], 16));
-	c.push(parseInt(x[2], 16));
-})
-
-console.log(colorArr);
+// create array of hex color values
+// let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
+// let a = [], b = [], c = [];
+// colorArr.forEach(x => {
+// 	a.push(parseInt(x[0], 16));
+// 	b.push(parseInt(x[1], 16));
+// 	c.push(parseInt(x[2], 16));
+// })
+//
+// console.log(colorArr);
 // console.log(Math.round(a.reduce((a = 0, c) => a += c)/64));
 // console.log(Math.round(b.reduce((a = 0, c) => a += c)/64));
 // console.log(Math.round(c.reduce((a = 0, c) => a += c)/64));
 
-
+// fill canvas with random color pixels
 // let hex = ['00', '11', '22', '33',
 // 					 '44', '55', '66', '77',
 // 					 '88', '99', 'AA', 'BB',
