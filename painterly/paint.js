@@ -1,13 +1,31 @@
+const contextMenu = document.querySelector('#contextMenu');
+const createForm = document.querySelector('#create');
+const scaleInput = document.querySelector('#scale');
+const scaleRange = document.querySelector('#scaleRange');
 const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
-const color = colorPalette.querySelector('#color')
-const palette = colorPalette.querySelector('#palette')
-const tools = toolbar.querySelectorAll('.tool')
-const contextMenu = document.querySelector('#contextMenu');
-const canvasDiv = document.querySelector('#canvas')
-const createForm = document.querySelector('#create')
-const scaleInput = document.querySelector('#scale')
-const scaleRange = document.querySelector('#scaleRange')
+const color = colorPalette.querySelector('#color');
+const palette = colorPalette.querySelector('#palette');
+const paletteColors = Array.from(document.querySelectorAll('.pal-color'));
+const tools = toolbar.querySelectorAll('.tool');
+const canvasDiv = document.querySelector('#canvas');
+
+for (let color of paletteColors) {
+	color.style.backgroundColor = `#${color.id}`;
+	let brt = Number.parseInt(color.id.slice(0, 2), 16) + Number.parseInt(color.id.slice(2, 4), 16) + Number.parseInt(color.id.slice(4, 6), 16);
+	if (brt < 200) {
+		color.style.color = "#fff4";
+	} else {
+		color.style.color = "#0004";
+	}
+}
+
+palette.addEventListener('click', setColor)
+function setColor(e) {
+	activeColor = `#${e.target.id}`
+	console.log(`%cactive color: %c${activeColor.slice(1)}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+}
+
 let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
@@ -22,6 +40,7 @@ console.dir(canvasDiv);
 console.dir(createForm);
 console.dir(scaleInput);
 console.dir(scaleRange);
+console.dir(paletteColors);
 
 // const state = {
 // 	picture: {w, h, [pix]},
@@ -77,7 +96,7 @@ const scaleChange = e => {
 	scaleRange.value = scale;
 	// would normally dispatch a thing...
 	// then have input derive value from state
-	console.log(scale);
+	console.log(`%cscale: ${scale}`, "font-size:18px;", );
 	drawPicture(screenPicture, canvas, scale)
 }
 scaleInput.addEventListener('change', scaleChange)
@@ -157,27 +176,36 @@ function drawPixel(e) {
 //												i havent thought this through immensely but it works
 
 	let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
+	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
 
 	// makes it so a coordX value above the width doesnt simply go down to the next line
-	if (coordX >= screenPicture.width) {
+	if (
+			coordX >= screenPicture.width
+	||	mousePos.x < canvasPos.x
+	||	coordY >= screenPicture.height
+	||	mousePos.y < canvasPos.y
+	) {
+		console.log("%c Outta Bounds", "color: #f00; font-size:24px; text-shadow:1px 1px 2px #80f; font-family:Futura");
 		return;
 	}
-	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
 
 	let pixelIndex = screenPicture.width * coordY + coordX
 	let pixelInQuestion = screenPicture.pixels[pixelIndex]
 
 	// console.log(e);
-	console.log(mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x);
+	console.log(
+		`${mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x}\t/ ${scale} =\t${coordX},\n${mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y}\t/ ${scale} =\t${coordY}`);
+	console.log(`x:${coordX} + y:(${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
 
 	// console.log("x:", Math.floor(e.offsetX/scale), "y:", Math.floor(e.offsetY/scale));
 	// console.log("x:",Math.floor((mousePos.x - canvasPos.x)/scale), "y:", Math.floor((mousePos.y - canvasPos.y)/scale));
-	console.log(pixelInQuestion);
+	// console.log(pixelInQuestion);
 
 	// activeColor = "#" + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16) + Math.floor(Math.random() * 15).toString(16);
 
-	activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
-
+	if (activeColor === null) {
+		activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+	}
 
 	if (pixelInQuestion === "#FFFFFF") {
 		screenPicture.pixels[pixelIndex] = activeColor;
@@ -185,6 +213,8 @@ function drawPixel(e) {
 		screenPicture.pixels[pixelIndex] = "#FFFFFF";
 	}
 	drawPicture(screenPicture, canvas, scale);
+
+	console.log(activeColor);
 }
 
 
@@ -192,7 +222,7 @@ let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 drawPicture(screenPicture, canvas, scale);
 
 
-let activeColor = "#000000";
+let activeColor = null;
 let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
 let a = [], b = [], c = [];
 colorArr.forEach(x => {
