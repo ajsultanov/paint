@@ -6,10 +6,10 @@ const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
 const color = colorPalette.querySelector('#color');
 const primColor = color.querySelector('#color-1')
+const secColor = color.querySelector('#color-2')
 const palette = colorPalette.querySelector('#palette');
 const paletteColors = Array.from(document.querySelectorAll('.pal-color'));
 const optPaletteColors = Array.from(document.querySelectorAll('.pal-color.opt'));
-console.log(optPaletteColors);
 const tools = toolbar.querySelectorAll('.tool');
 const canvasDiv = document.querySelector('#canvas');
 
@@ -17,6 +17,10 @@ let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
 
+function windowResize() {
+	paletteRefresh();
+	canvasRefresh();
+}
 function paletteRefresh() {
 	if (palette.offsetWidth < 130) {
 		for (let color of optPaletteColors) {
@@ -29,7 +33,7 @@ function paletteRefresh() {
 	}
 }
 paletteRefresh()
-window.addEventListener('resize', paletteRefresh)
+window.addEventListener('resize', windowResize)
 
 function brtCheck(color) {
 	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
@@ -46,17 +50,31 @@ for (let color of paletteColors) {
 }
 
 palette.addEventListener('click', setColor)
+palette.addEventListener('contextmenu', setColor)
 function setColor(e) {
-	activeColor = `#${e.target.id}`;
-	primColor.style.backgroundColor = activeColor;
-	if (brtCheck(e.target.id)) {
-		color.style.color = "#0008";
-	} else {
-		color.style.color = "#fff8";
+	if (e.target.id === "palette") { return; }
+
+
+	if (e.button === 0 ){
+		activeColor = `#${e.target.id}`;
+		primColor.style.backgroundColor = activeColor;
+		if (brtCheck(e.target.id)) {
+			primColor.style.color = "#0008";
+		} else {
+			primColor.style.color = "#fff8";
+		}
+	} else if (e.button === 2) {
+		e.preventDefault()
+		secColor.style.backgroundColor = `#${e.target.id}`;
+		if (brtCheck(e.target.id)) {
+			secColor.style.color = "#0008";
+		} else {
+			secColor.style.color = "#fff8";
+		}
 	}
 	console.log(`%cactive color: %c${activeColor.slice(1)}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+	return false;
 }
-
 
 class Picture {
   constructor(width, height, pixels) {
@@ -113,10 +131,15 @@ const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 canvasDiv.appendChild(canvas);
 const canvasPos = {x:0, y:0, width:0, height:0};
-canvasPos.x = canvas.getBoundingClientRect().x;
-canvasPos.y = canvas.getBoundingClientRect().y;
-canvasPos.width = canvas.getBoundingClientRect().width;
-canvasPos.height = canvas.getBoundingClientRect().height;
+
+
+function canvasRefresh() {
+	canvasPos.x = canvas.getBoundingClientRect().x;
+	canvasPos.y = canvas.getBoundingClientRect().y;
+	canvasPos.width = canvas.getBoundingClientRect().width;
+	canvasPos.height = canvas.getBoundingClientRect().height;
+}
+canvasRefresh()
 
 let mousePos = {x:0, y:0};
 function mouseMovin(e) {
@@ -175,6 +198,7 @@ function drawPixel(e) {
 	if (e.type === "keydown") { key = e.key };
 // 												get mouseEvent coordinate
 // 												OR
+//												for keyboardEvent:
 //   		*		*									client position of mouse
 // 			\__/								+ amount of canvas element scroll
 //													+ amount of window scroll
@@ -192,6 +216,7 @@ function drawPixel(e) {
 	||	mousePos.y < canvasPos.y
 	) {
 		console.log("%c Outta Bounds", "color: #f00; font-size:24px; text-shadow:1px 1px 2px #80f; font-family:Futura");
+		console.log({ox:mousePos.x, oy:mousePos.y, cx:canvasPos.x, cy:canvasPos.y});
 		return;
 	}
 
