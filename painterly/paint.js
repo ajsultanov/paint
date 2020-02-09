@@ -145,9 +145,15 @@ const createCanvas = e => {
 createForm.addEventListener('submit', createCanvas)
 
 const scaleChange = e => {
+	if (screenPicture.width * screenPicture.height > 307200) {
+		scaleInput.value = scale;
+		scaleRange.value = scale;
+		return;
+	}
 	scale = e.target.value;
 	scaleInput.value = scale;
 	scaleRange.value = scale;
+	console.log(screenPicture.width * screenPicture.height * scale);
 	console.log(`%cscale: ${scale}x`, `font-size:${scale/1.5+5}px;`, );
 	drawPicture(screenPicture, canvas, scale)
 }
@@ -198,6 +204,7 @@ function drawPicture(picture, canvas, scale) {
 }
 
 function drawPixel(e) {
+	console.time('draw');
 	// if (e.type === "keydown") { key = e.key };
 // 												get mouseEvent coordinate
 // 												OR
@@ -236,8 +243,8 @@ function drawPixel(e) {
 		screenPicture.pixels[pixelIndex] = "#FFFFFF";
 	}
 	drawPicture(screenPicture, canvas, scale);
+	console.timeEnd('draw');
 }
-
 
 
 
