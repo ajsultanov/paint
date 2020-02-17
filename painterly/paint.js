@@ -1,6 +1,6 @@
 const contextMenu = document.querySelector('#contextMenu');
 const createForm = document.querySelector('#create');
-const scaleInput = document.querySelector('#scale');
+const scaleInput = document.querySelector('#scaleInput');
 const scaleRange = document.querySelector('#scaleRange');
 const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
