@@ -17,17 +17,22 @@ const ctx = canvas.getContext('2d');
 const canvasPos = {x:0, y:0, width:0, height:0};
 canvasDiv.appendChild(canvas);
 
-// let arr1 = [1,2,3], arr2 = [4,5,6]
+// let arr1 = [1,2,3], arr3 = [4,5,6], arr5 = [7,8,9]
 //
-// let arr3 = [...arr1]
+// let arr2 = [...arr1]
 // arr1.pop() 	//--> 3
 // arr1 				//--> [1,2]
-// arr3 				//--> [1,2,3]
+// arr2 				//--> [1,2,3]
 //
-// let [...arr4] = arr2
-// arr2.pop() 	//--> 6
-// arr2 				//--> [4,5]
+// let [...arr4] = arr3
+// arr3.pop() 	//--> 6
+// arr3 				//--> [4,5]
 // arr4 				//--> [4,5,6]
+//
+// let [...arr6] = [...arr5]
+// arr5.pop() 	//--> 9
+// arr5 				//--> [7,8]
+// arr6 				//--> [7,8,9]
 //
 // ? ?? ??? huh ??? ?? ?
 
@@ -176,13 +181,19 @@ let keyInput = e => {
 	console.log(this);
 	key = e.key;
 
-	switch (e.key) {
+	switch (key) {
 		case 'w':
-			e => drawpixel(e);
+      drawPixel(e);
 			break;
-		default: null;
+    case 'd':
+      console.log('frackin DDDDDDD');
+      break;
+		default:
+      console.log('key:', key);
+      return null;
 	}
 }
+// document.addEventListener('keydown', e => drawPixel(e));
 document.addEventListener('keydown', e => {
 	if (e.key !== key) { keyInput(e) };
 });
