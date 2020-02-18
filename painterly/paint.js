@@ -174,7 +174,15 @@ function mouseMovin(e) {
 	mousePos.y = e.clientY;
 }
 document.addEventListener('mousemove', mouseMovin);
-canvas.addEventListener('mousedown', drawPixel);
+canvas.addEventListener('mousedown', e => {
+  heldDown = true;
+  console.log(heldDown);
+  drawPixel(e);
+});
+canvas.addEventListener('mouseup', () => {
+  heldDown = false;
+  console.log(heldDown);
+});
 
 let key = null;
 let keyInput = e => {
@@ -186,18 +194,27 @@ let keyInput = e => {
       drawPixel(e);
 			break;
     case 'd':
-      console.log('frackin DDDDDDD');
+      console.log('DDDDDDD');
       break;
 		default:
       console.log('key:', key);
       return null;
 	}
 }
+let heldDown = false;
 // document.addEventListener('keydown', e => drawPixel(e));
 document.addEventListener('keydown', e => {
-	if (e.key !== key) { keyInput(e) };
+	if (e.key !== key) {
+    heldDown = true;
+    console.log(heldDown);
+    keyInput(e)
+  };
 });
-document.addEventListener('keyup', () => key = null);
+document.addEventListener('keyup', () => {
+  key = null;
+  heldDown = false;
+  console.log(heldDown);
+});
 
 
 function drawPicture(picture, canvas, scale) {
