@@ -169,10 +169,16 @@ let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3
 console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 
 let mousePos = {x:0, y:0};
+
 function mouseMovin(e) {
 	mousePos.x = e.clientX;
 	mousePos.y = e.clientY;
+  if (heldDown) {
+    // check if pixel is different from the one just registered
+    drawPixel(e);
+  }
 }
+
 document.addEventListener('mousemove', mouseMovin);
 canvas.addEventListener('mousedown', e => {
   heldDown = true;
