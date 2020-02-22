@@ -203,20 +203,20 @@ function mouseMovin(e) {
   }
 }
 
-document.addEventListener('mousemove', mouseMovin);
-canvas.addEventListener('mousedown', e => {
-  heldDown = true;
-  //console.log(heldDown);
-  drawPixel(e);
-});
-canvas.addEventListener('mouseup', () => {
-  heldDown = false;
-  //console.log(heldDown);
-});
-canvas.addEventListener('mouseleave', () => {
-  heldDown = false;
-  //console.log(heldDown);
-});
+// document.addEventListener('mousemove', mouseMovin);
+// canvas.addEventListener('mousedown', e => {
+//   heldDown = true;
+//   //console.log(heldDown);
+//   drawPixel(e);
+// });
+// canvas.addEventListener('mouseup', () => {
+//   heldDown = false;
+//   //console.log(heldDown);
+// });
+// canvas.addEventListener('mouseleave', () => {
+//   heldDown = false;
+//   //console.log(heldDown);
+// });
 
 //
 //
@@ -255,11 +255,11 @@ let keyInput = e => {
 let heldDown = false;
 // document.addEventListener('keydown', e => drawPixel(e));
 document.addEventListener('keydown', e => {
-	if (e.key !== key) {
-    heldDown = true;
+	// if (e.key !== key) {
+  //   heldDown = true;
     //console.log(heldDown);
-    keyInput(e)
-  };
+    keyHandler(e)
+  // };
 });
 document.addEventListener('keyup', () => {
   key = null;
@@ -324,46 +324,10 @@ function drawPicture(picture, canvas, scale) {
 //
 //
 //
-
-function drawPixel(e) {
+function drawPixel(pixelIndex) {
+  if (screenPicture.pixels[pixelIndex] === activeColor) { return };
 	console.time('draw');
-	// if (e.type === "keydown") { key = e.key };
-// 												get mouseEvent coordinate
-// 												OR
-//												for keyboardEvent:
-//   		*		*									client position of mouse
-// 			\__/								+ amount of canvas element scroll
-//													+ amount of window scroll
-// 													- canvas element position
-//												i havent thought this through immensely but it works
-
-	let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
-	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
-
-	// makes it so a coordX value above the width doesnt simply go down to the next line
-	if (
-			coordX >= screenPicture.width
-	||	mousePos.x < canvasPos.x
-	||	coordY >= screenPicture.height
-	||	mousePos.y < canvasPos.y
-	) {
-		// console.log("%c Outta Bounds", "color: #f00; font-size:24px; text-shadow:1px 1px 2px #80f; font-family:Futura");
-		// console.log({ox:mousePos.x, oy:mousePos.y, cx:canvasPos.x, cy:canvasPos.y});
-		return;
-	}
-
-	let pixelIndex = screenPicture.width * coordY + coordX
-	let pixelInQuestion = screenPicture.pixels[pixelIndex]
-
-	// console.log(
-		`${mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x}\t/ ${scale} =\t${coordX},\n${mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y}\t/ ${scale} =\t${coordY}`);
-	// console.log(`x:${coordX} + y:${coordY * screenPicture.width} (${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
-
-	// if (pixelInQuestion === "#FFFFFF") {
-		screenPicture.pixels[pixelIndex] = activeColor;
-	// } else {
-	// 	screenPicture.pixels[pixelIndex] = "#FFFFFF";
-	// }
+	screenPicture.pixels[pixelIndex] = activeColor;
 	drawPicture(screenPicture, canvas, scale);
 	console.timeEnd('draw');
 }
@@ -384,10 +348,9 @@ function drawPixel(e) {
 
 //
 
-function erasePixel(e) {
+function erasePixel(pixelIndex) {
   console.time('erase');
-  return "I am real~!"
-
+  screenPicture.pixels[pixelIndex] = "#FFFFFF";
   drawPicture(screenPicture, canvas, scale);
   console.timeEnd('erase');
 }
@@ -489,25 +452,63 @@ function erasePixel(e) {
 //
 //
 
+let lastKey = null;
+let lastPixelIndex = null;
 // keydown event handler
-//  save key
-//  heldDown = true
+function keyHandler(e) {
+  heldDown = true;
+  key = e.key;
 //  get position
-//  check if inbounds
-//  determine pixelIndex
-//  check against lastPixelIndex
-//    same: check against lastKey
-//      same: return
-//      diff: save and continue
-//    diff: save and continue
-
+  let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
+	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
+//  check if in canvas bounds
+  if (
+			coordX >= screenPicture.width
+	||	mousePos.x < canvasPos.x
+	||	coordY >= screenPicture.height
+	||	mousePos.y < canvasPos.y
+  ) {
+    console.log("o.o.b.");
+    return;
+  };
+  let pixelIndex = screenPicture.width * coordY + coordX;
+  if (pixelIndex === lastPixelIndex) {
+// if position hasn't changed, check if key is different
+    if (key === lastKey) { return }
+    else {
+      lastPixelIndex = pixelIndex;
+      lastKey = key;
+      keySwitcher(key, pixelIndex);
+    }
+  } else {
+    lastPixelIndex = pixelIndex;
+    lastKey = key;
+    keySwitcher(key, pixelIndex);
+  }
+};
 // keyup event handler
-//  heldDown = false
-
-// canvas.mouseexit or whatever
-//  heldDown = false
-
+document.addEventListener('keyup', () => {
+  key = null;
+  heldDown = false;
+});
+// mouseleave event handler
+canvas.addEventListener('mouseleave', () => {
+  key = null;
+  heldDown = false;
+});
 // mousemove event handler
+canvas.addEventListener('mousemove', e => {
+  mousePos.x = e.clientX;
+	mousePos.y = e.clientY;
+  if (!heldDown) { return };
+  let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
+	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
+  let pixelIndex = screenPicture.width * coordY + coordX;
+  if (pixelIndex !== lastPixelIndex) {
+    lastPixelIndex = pixelIndex;
+    keySwitcher(lastKey, pixelIndex);
+  }
+});
 //  check heldDown
 //    false: return
 //  get position
@@ -517,8 +518,12 @@ function erasePixel(e) {
 //    same: return
 //    diff: save and continue
 
-// key switcher
+function keySwitcher(key, pixelIndex) {
+  switch(key) {
 //  draw
+    case 'w':
+      drawPixel(pixelIndex);
+      break;
 //    set pixels[pixelIndex] to activeColor
 //  erase
 //    set pixels[pixelIndex] to FFF
@@ -536,3 +541,8 @@ function erasePixel(e) {
 //    set on keyup
 //  marquee...
 //    hmm
+    default:
+      console.log('key:', key);
+      return null;
+  }
+}
