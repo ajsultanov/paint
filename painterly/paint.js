@@ -130,7 +130,7 @@ function setColor(e) {
 			secColor.style.color = "#fff8";
 		}
 	}
-	console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+	//console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
 	return false;		// disables context menu from actually appearing
 }
 palette.addEventListener('click', setColor)
@@ -142,10 +142,10 @@ const createCanvas = e => {
 	if (document.activeElement.id === 'scale') { return };
 	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
 	screenPicture = pic;
-	console.log(pic);
+	//console.log(pic);
 	drawPicture(pic, canvas, scale)
 	activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
-	console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
+	//console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 }
 createForm.addEventListener('submit', createCanvas)
 
@@ -158,15 +158,15 @@ const scaleChange = e => {
 	scale = e.target.value;
 	scaleInput.value = scale;
 	scaleRange.value = scale;
-	console.log(screenPicture.width * screenPicture.height * scale);
-	console.log(`%cscale: ${scale}x`, `font-size:${scale/1.5+5}px;`, );
+	//console.log(screenPicture.width * screenPicture.height * scale);
+	//console.log(`%cscale: ${scale}x`, `font-size:${scale/1.5+5}px;`, );
 	drawPicture(screenPicture, canvas, scale)
 }
 scaleInput.addEventListener('change', scaleChange)
 scaleRange.addEventListener('change', scaleChange)
 
 let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
-console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
+//console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 
 let mousePos = {x:0, y:0};
 
@@ -206,16 +206,16 @@ function mouseMovin(e) {
 document.addEventListener('mousemove', mouseMovin);
 canvas.addEventListener('mousedown', e => {
   heldDown = true;
-  console.log(heldDown);
+  //console.log(heldDown);
   drawPixel(e);
 });
 canvas.addEventListener('mouseup', () => {
   heldDown = false;
-  console.log(heldDown);
+  //console.log(heldDown);
 });
 canvas.addEventListener('mouseleave', () => {
   heldDown = false;
-  console.log(heldDown);
+  //console.log(heldDown);
 });
 
 //
@@ -234,7 +234,7 @@ canvas.addEventListener('mouseleave', () => {
 
 let key = null;
 let keyInput = e => {
-	console.log(this);
+	//console.log(this);
 	key = e.key;
 
 	switch (key) {
@@ -257,14 +257,14 @@ let heldDown = false;
 document.addEventListener('keydown', e => {
 	if (e.key !== key) {
     heldDown = true;
-    console.log(heldDown);
+    //console.log(heldDown);
     keyInput(e)
   };
 });
 document.addEventListener('keyup', () => {
   key = null;
   heldDown = false;
-  console.log(heldDown);
+  //console.log(heldDown);
 });
 
 //  //
@@ -347,23 +347,23 @@ function drawPixel(e) {
 	||	coordY >= screenPicture.height
 	||	mousePos.y < canvasPos.y
 	) {
-		console.log("%c Outta Bounds", "color: #f00; font-size:24px; text-shadow:1px 1px 2px #80f; font-family:Futura");
-		console.log({ox:mousePos.x, oy:mousePos.y, cx:canvasPos.x, cy:canvasPos.y});
+		// console.log("%c Outta Bounds", "color: #f00; font-size:24px; text-shadow:1px 1px 2px #80f; font-family:Futura");
+		// console.log({ox:mousePos.x, oy:mousePos.y, cx:canvasPos.x, cy:canvasPos.y});
 		return;
 	}
 
 	let pixelIndex = screenPicture.width * coordY + coordX
 	let pixelInQuestion = screenPicture.pixels[pixelIndex]
 
-	console.log(
+	// console.log(
 		`${mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x}\t/ ${scale} =\t${coordX},\n${mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y}\t/ ${scale} =\t${coordY}`);
-	console.log(`x:${coordX} + y:${coordY * screenPicture.width} (${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
+	// console.log(`x:${coordX} + y:${coordY * screenPicture.width} (${coordY} * ${screenPicture.width}) = ${pixelIndex}`);
 
-	if (pixelInQuestion === "#FFFFFF") {
+	// if (pixelInQuestion === "#FFFFFF") {
 		screenPicture.pixels[pixelIndex] = activeColor;
 	// } else {
 	// 	screenPicture.pixels[pixelIndex] = "#FFFFFF";
-	}
+	// }
 	drawPicture(screenPicture, canvas, scale);
 	console.timeEnd('draw');
 }
@@ -433,3 +433,106 @@ function erasePixel(e) {
 // 		ctx.fillRect(x * scale, y * scale, scale, scale);
 // 	}
 // }
+
+
+//
+//
+//  //
+
+//
+
+//  //
+//
+//
+//
+//
+
+
+//  //
+//
+//  //
+//
+//
+
+//
+//
+//
+
+//  //
+//
+//  //
+
+//  //
+
+
+//  //
+
+//  //
+//
+//  //
+
+//  //
+//
+//  //
+
+//  //
+
+//
+//
+//
+//
+  ////
+
+//  //
+//
+//
+//
+//
+
+// keydown event handler
+//  save key
+//  heldDown = true
+//  get position
+//  check if inbounds
+//  determine pixelIndex
+//  check against lastPixelIndex
+//    same: check against lastKey
+//      same: return
+//      diff: save and continue
+//    diff: save and continue
+
+// keyup event handler
+//  heldDown = false
+
+// canvas.mouseexit or whatever
+//  heldDown = false
+
+// mousemove event handler
+//  check heldDown
+//    false: return
+//  get position
+//  check if inbounds
+//  determine pixelIndex
+//  check against lastPixelIndex
+//    same: return
+//    diff: save and continue
+
+// key switcher
+//  draw
+//    set pixels[pixelIndex] to activeColor
+//  erase
+//    set pixels[pixelIndex] to FFF
+//  fill
+//    need a search algorithm...
+//  line
+//    save origin
+//    redraw on mousemove
+//    set on keyup
+//  sample
+//    set activeColor
+//  square
+//    save origin
+//    redraw on mousemove
+//    set on keyup
+//  marquee...
+//    hmm
