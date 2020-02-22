@@ -170,6 +170,30 @@ console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};
 
 let mousePos = {x:0, y:0};
 
+//
+//
+//
+//
+//
+
+//
+//
+//
+//
+  ////
+
+//  //
+
+//  //
+//
+//
+
+//  //
+    //
+////
+
+//
+
 function mouseMovin(e) {
 	mousePos.x = e.clientX;
 	mousePos.y = e.clientY;
@@ -189,6 +213,24 @@ canvas.addEventListener('mouseup', () => {
   heldDown = false;
   console.log(heldDown);
 });
+canvas.addEventListener('mouseleave', () => {
+  heldDown = false;
+  console.log(heldDown);
+});
+
+//
+//
+//  //
+//
+//
+
+//
+
+//
+//
+//  //
+//
+  ////
 
 let key = null;
 let keyInput = e => {
@@ -201,6 +243,9 @@ let keyInput = e => {
 			break;
     case 'd':
       console.log('DDDDDDD');
+      break;
+    case 'a':
+      erasePixel(e);
       break;
 		default:
       console.log('key:', key);
@@ -222,6 +267,29 @@ document.addEventListener('keyup', () => {
   console.log(heldDown);
 });
 
+//  //
+//
+//
+//
+//  //
+
+//  //
+
+//  //
+
+//
+//
+  ////
+//
+//
+
+//x
+
+//  //
+//
+//  //
+
+//  //
 
 function drawPicture(picture, canvas, scale) {
   canvas.width = picture.width * scale;
@@ -236,6 +304,26 @@ function drawPicture(picture, canvas, scale) {
     }
   }
 }
+
+//
+//
+//  //
+
+//  //
+
+//  //
+//
+//  //
+
+//  //
+//
+//
+
+//  //
+//
+//
+//
+//
 
 function drawPixel(e) {
 	console.time('draw');
@@ -273,15 +361,48 @@ function drawPixel(e) {
 
 	if (pixelInQuestion === "#FFFFFF") {
 		screenPicture.pixels[pixelIndex] = activeColor;
-	} else {
-		screenPicture.pixels[pixelIndex] = "#FFFFFF";
+	// } else {
+	// 	screenPicture.pixels[pixelIndex] = "#FFFFFF";
 	}
 	drawPicture(screenPicture, canvas, scale);
 	console.timeEnd('draw');
 }
 
+//
 
+//  //
+//
+//  //
 
+//  //
+//
+//
+
+//  //
+    //
+////
+
+//
+
+function erasePixel(e) {
+  console.time('erase');
+  return "I am real~!"
+
+  drawPicture(screenPicture, canvas, scale);
+  console.timeEnd('erase');
+}
+
+//
+
+//
+//
+//
+
+//  //
+//
+//  //
+//
+//
 
 // create array of hex color values
 // let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
