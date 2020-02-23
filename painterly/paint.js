@@ -70,7 +70,6 @@ scaleRange.value = scale;
 let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 drawPicture(screenPicture, canvas, scale);
 
-
 function windowResize() {
 	paletteRefresh();
 	canvasRefresh();
@@ -168,8 +167,6 @@ scaleRange.addEventListener('change', scaleChange)
 let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 //console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 
-let mousePos = {x:0, y:0};
-
 //
 //
 //
@@ -192,81 +189,6 @@ let mousePos = {x:0, y:0};
     //
 ////
 
-//
-
-function mouseMovin(e) {
-	mousePos.x = e.clientX;
-	mousePos.y = e.clientY;
-  if (heldDown) {
-    // check if pixel is different from the one just registered
-    drawPixel(e);
-  }
-}
-
-// document.addEventListener('mousemove', mouseMovin);
-// canvas.addEventListener('mousedown', e => {
-//   heldDown = true;
-//   //console.log(heldDown);
-//   drawPixel(e);
-// });
-// canvas.addEventListener('mouseup', () => {
-//   heldDown = false;
-//   //console.log(heldDown);
-// });
-// canvas.addEventListener('mouseleave', () => {
-//   heldDown = false;
-//   //console.log(heldDown);
-// });
-
-//
-//
-//  //
-//
-//
-
-//
-
-//
-//
-//  //
-//
-  ////
-
-let key = null;
-let keyInput = e => {
-	//console.log(this);
-	key = e.key;
-
-	switch (key) {
-		case 'w':
-      drawPixel(e);
-			break;
-    case 'd':
-      console.log('DDDDDDD');
-      break;
-    case 'a':
-      erasePixel(e);
-      break;
-		default:
-      console.log('key:', key);
-      return null;
-	}
-}
-let heldDown = false;
-// document.addEventListener('keydown', e => drawPixel(e));
-document.addEventListener('keydown', e => {
-	// if (e.key !== key) {
-  //   heldDown = true;
-    //console.log(heldDown);
-    keyHandler(e)
-  // };
-});
-document.addEventListener('keyup', () => {
-  key = null;
-  heldDown = false;
-  //console.log(heldDown);
-});
-
 //  //
 //
 //
@@ -277,19 +199,27 @@ document.addEventListener('keyup', () => {
 
 //  //
 
+//  //
 //
-//
-  ////
+//  //
 //
 //
 
-//x
+//
+//
+//
+
+//  //
+
+//  //
+//
+//
 
 //  //
 //
 //  //
 
-//  //
+//
 
 function drawPicture(picture, canvas, scale) {
   canvas.width = picture.width * scale;
@@ -324,6 +254,7 @@ function drawPicture(picture, canvas, scale) {
 //
 //
 //
+
 function drawPixel(pixelIndex) {
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
 	console.time('draw');
@@ -331,41 +262,41 @@ function drawPixel(pixelIndex) {
 	drawPicture(screenPicture, canvas, scale);
 	console.timeEnd('draw');
 }
-
-//
-
-//  //
-//
-//  //
-
-//  //
-//
-//
-
-//  //
-    //
-////
-
-//
-
 function erasePixel(pixelIndex) {
+  if (screenPicture.pixels[pixelIndex] === '#FFFFFF') { return };
   console.time('erase');
   screenPicture.pixels[pixelIndex] = "#FFFFFF";
   drawPicture(screenPicture, canvas, scale);
   console.timeEnd('erase');
 }
+function fillSpace(pixelIndex) {
+  if (screenPicture.pixels[pixelIndex] === activeColor) { return };
+  console.time("fill");
+  let targetColor = screenPicture.pixels[pixelIndex];
+  floodFill(pixelIndex, targetColor, activeColor);
+  drawPicture(screenPicture, canvas, scale);
+  console.timeEnd("fill");
+}
+function floodFill(index, target, active) {
+  let yStep = screenPicture.width;
+  if (index % (yStep - 1) === -1) { return }
+  if (target === active) { return }
+  else if (screenPicture.pixels[index] !== target) { return }
+  else { screenPicture.pixels[index] = active }
+  floodFill(index + yStep, target, active);
+  floodFill(index - yStep, target, active);
+  floodFill(index + 1, target, active);
+  floodFill(index - 1, target, active);
+  return;
+}
+function getColor(pixelIndex) {
+  activeColor = screenPicture.pixels[pixelIndex];
+  // show in primary palette
+}
 
-//
 
-//
-//
-//
 
-//  //
-//
-//  //
-//
-//
+// fun weird palette stuff
 
 // create array of hex color values
 // let colorArr = Array.from(new Array(64), x => Math.floor(Math.random() * 4096).toString(16).padStart(3, "0"));
@@ -452,8 +383,14 @@ function erasePixel(pixelIndex) {
 //
 //
 
+let mousePos = {x:0, y:0};
+let key = null;
+let heldDown = false;
 let lastKey = null;
 let lastPixelIndex = null;
+document.addEventListener('keydown', e => {
+  keyHandler(e);
+});
 // keydown event handler
 function keyHandler(e) {
   heldDown = true;
@@ -526,20 +463,30 @@ function keySwitcher(key, pixelIndex) {
       break;
 //    set pixels[pixelIndex] to activeColor
 //  erase
+    case 'a':
+      erasePixel(pixelIndex);
+      break;
 //    set pixels[pixelIndex] to FFF
 //  fill
-//    need a search algorithm...
+    case 'f':
+      fillSpace(pixelIndex);
+      break;
 //  line
 //    save origin
 //    redraw on mousemove
 //    set on keyup
 //  sample
+    case 'q':
+      getColor(pixelIndex);
+      break;
 //    set activeColor
 //  square
 //    save origin
 //    redraw on mousemove
 //    set on keyup
 //  marquee...
+//    hmm
+//  undo...
 //    hmm
     default:
       console.log('key:', key);

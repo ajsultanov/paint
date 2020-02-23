@@ -154,7 +154,7 @@ form {
 	border: 1px solid black;
 	overflow: auto;
 
-	cursor: url("arrow.png"), crosshair;
+	cursor: url("plus.png"), crosshair;
 }
 
 #infoBar {
