@@ -114,7 +114,8 @@ function setColor(e) {
 
 	if (e.button === 0 ){
 		activeColor = `#${e.target.id}`;
-		primColor.style.backgroundColor = activeColor;
+		// primColor.style.backgroundColor = activeColor;
+    colorRefresh()
 		if (brtCheck(e.target.id)) {
 			primColor.style.color = "#0008";
 		} else {
@@ -122,7 +123,9 @@ function setColor(e) {
 		}
 	} else if (e.button === 2) {
 		e.preventDefault()
-		secColor.style.backgroundColor = `#${e.target.id}`;
+    backColor = `#${e.target.id}`;
+		// secColor.style.backgroundColor = `#${e.target.id}`;
+    colorRefresh();
 		if (brtCheck(e.target.id)) {
 			secColor.style.color = "#0008";
 		} else {
@@ -135,6 +138,10 @@ function setColor(e) {
 palette.addEventListener('click', setColor)
 palette.addEventListener('contextmenu', setColor) // right click
 
+function colorRefresh(sColor) {
+  primColor.style.backgroundColor = activeColor;
+  secColor.style.backgroundColor = backColor;
+}
 
 const createCanvas = e => {
 	e.preventDefault();
@@ -166,6 +173,8 @@ scaleRange.addEventListener('change', scaleChange)
 
 let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 //console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
+let backColor = '#' + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+colorRefresh();
 
 //
 //
@@ -257,43 +266,58 @@ function drawPicture(picture, canvas, scale) {
 
 function drawPixel(pixelIndex) {
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
-	console.time('draw');
+	// console.time('draw');
 	screenPicture.pixels[pixelIndex] = activeColor;
+  console.log(pixelIndex);
 	drawPicture(screenPicture, canvas, scale);
-	console.timeEnd('draw');
+	// console.timeEnd('draw');
 }
 function erasePixel(pixelIndex) {
   if (screenPicture.pixels[pixelIndex] === '#FFFFFF') { return };
-  console.time('erase');
+  // console.time('erase');
   screenPicture.pixels[pixelIndex] = "#FFFFFF";
   drawPicture(screenPicture, canvas, scale);
-  console.timeEnd('erase');
+  // console.timeEnd('erase');
 }
+function drawRect() {
+
+}
+
 function fillSpace(pixelIndex) {
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
-  console.time("fill");
+  // console.time("fill");
   let targetColor = screenPicture.pixels[pixelIndex];
   floodFill(pixelIndex, targetColor, activeColor);
   drawPicture(screenPicture, canvas, scale);
-  console.timeEnd("fill");
+  // console.timeEnd("fill");
 }
 function floodFill(index, target, active) {
   let yStep = screenPicture.width;
   if (index % (yStep - 1) === -1) { return }
   if (target === active) { return }
   else if (screenPicture.pixels[index] !== target) { return }
-  else { screenPicture.pixels[index] = active }
+  else { screenPicture.pixels[index] = active };
+  // if border pixel, return
+  if ((index + 1) % (yStep) === 1 && index !== 1) { --index }
+  // else if (index % yStep === yStep) { ++index }
   floodFill(index + yStep, target, active);
   floodFill(index - yStep, target, active);
   floodFill(index + 1, target, active);
   floodFill(index - 1, target, active);
   return;
 }
+
+
 function getColor(pixelIndex) {
   activeColor = screenPicture.pixels[pixelIndex];
-  primColor.style.backgroundColor = activeColor;
+  colorRefresh();
 }
-
+function colorSwap() {
+  let buffer = activeColor;
+  activeColor = backColor;
+  backColor = buffer;
+  colorRefresh();
+}
 
 
 // fun weird palette stuff
@@ -391,10 +415,13 @@ let lastPixelIndex = null;
 document.addEventListener('keydown', e => {
   keyHandler(e);
 });
+const utilityKeys = ['z', 'x']
 // keydown event handler
 function keyHandler(e) {
-  heldDown = true;
   key = e.key;
+  if (utilityKeys.includes(key)) { keySwitcher(key, 0) };
+  heldDown = true;
+
 //  get position
   let coordX = Math.floor((e.offsetX || mousePos.x + canvasDiv.scrollLeft + window.scrollX - canvasPos.x) / scale);
 	let coordY = Math.floor((e.offsetY || mousePos.y + canvasDiv.scrollTop + window.scrollY - canvasPos.y) / scale);
@@ -464,11 +491,13 @@ function keySwitcher(key, pixelIndex) {
 //    set pixels[pixelIndex] to activeColor
 //  erase
     case 'a':
+      console.log("erase");
       erasePixel(pixelIndex);
       break;
 //    set pixels[pixelIndex] to FFF
 //  fill
     case 'f':
+      console.log("fill");
       fillSpace(pixelIndex);
       break;
 //  line
@@ -477,6 +506,7 @@ function keySwitcher(key, pixelIndex) {
 //    set on keyup
 //  sample
     case 'q':
+      console.log("dropper");
       getColor(pixelIndex);
       break;
 //    set activeColor
@@ -488,6 +518,10 @@ function keySwitcher(key, pixelIndex) {
 //    hmm
 //  undo...
 //    hmm
+    case 'x':
+      console.log("swap");
+      colorSwap();
+      break;
     default:
       console.log('key:', key);
       return null;
