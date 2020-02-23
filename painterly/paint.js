@@ -138,9 +138,30 @@ function setColor(e) {
 palette.addEventListener('click', setColor)
 palette.addEventListener('contextmenu', setColor) // right click
 
-function colorRefresh(sColor) {
+function colorRefresh() {
   primColor.style.backgroundColor = activeColor;
   secColor.style.backgroundColor = backColor;
+
+  // HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+  // not incredibly...robust
+
+  let buffColor = [activeColor[1], activeColor[1], activeColor[2], activeColor[2], activeColor[3], activeColor[3]].join("");
+  if (brtCheck(buffColor)) {
+    console.log("BRITEE");
+    primColor.style.color = "#0008";
+  } else {
+    console.log("NOBRITEE");
+    primColor.style.color = "#fff8";
+  }
+
+  let buffColor2 = [backColor[1], backColor[1], backColor[2], backColor[2], backColor[3], backColor[3]].join("");
+  if (brtCheck(buffColor2)) {
+    console.log("BRITEE");
+    secColor.style.color = "#0008";
+  } else {
+    console.log("NOBRITEE");
+    secColor.style.color = "#fff8";
+  }
 }
 
 const createCanvas = e => {
@@ -279,6 +300,9 @@ function erasePixel(pixelIndex) {
   drawPicture(screenPicture, canvas, scale);
   // console.timeEnd('erase');
 }
+function drawLine() {
+
+}
 function drawRect() {
 
 }
@@ -307,6 +331,21 @@ function floodFill(index, target, active) {
   return;
 }
 
+function marquee() {
+
+}
+function lasso() {
+
+}
+function wand() {
+
+}
+function selectionBrush() {
+
+}
+function superWand() {
+  // cross between wand and selectionBrush
+}
 
 function getColor(pixelIndex) {
   activeColor = screenPicture.pixels[pixelIndex];
