@@ -291,7 +291,7 @@ function floodFill(index, target, active) {
 }
 function getColor(pixelIndex) {
   activeColor = screenPicture.pixels[pixelIndex];
-  // show in primary palette
+  primColor.style.backgroundColor = activeColor;
 }
 
 
