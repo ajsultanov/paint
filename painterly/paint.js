@@ -129,7 +129,7 @@ function setColor(e) {
 			primColor.style.color = "#fff8";
 		}
 	} else if (e.button === 2) {
-		e.preventDefault()
+		// e.preventDefault()
     backColor = `#${e.target.id}`;
 		// secColor.style.backgroundColor = `#${e.target.id}`;
     colorRefresh();
@@ -140,6 +140,8 @@ function setColor(e) {
 		}
 	}
 	//console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+
+  hexInput.value = activeColor.slice(1);
 	return false;		// disables context menu from actually appearing
 }
 palette.addEventListener('click', setColor)
@@ -147,9 +149,17 @@ palette.addEventListener('contextmenu', setColor) // right click
 
 
 function setByHex(e) {
+  console.log("setByHex");
+
   let hex = e.target.value;
-  console.log("setByHex", hex);
+  if (hex.length < 6) {
+    hex = hex.padEnd(6, "0")
+  }
+  else if (hex.length > 6) {
+    hex = hex.slice(0, 6)
+  }
   activeColor = `#${hex}`;
+  hexInput.value = hex;
   colorRefresh();
 };
 hexInput.addEventListener('change', setByHex);
@@ -224,6 +234,7 @@ let backColor = "#" +
   Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 colorRefresh();
 
+hexInput.value = activeColor.slice(1);
 //
 //
 //
@@ -494,7 +505,7 @@ const utilityKeys = ['z', 'x']
 function keyHandler(e) {
   console.log("keyHandler");
   key = e.key;
-  if (utilityKeys.includes(key)) { keySwitcher(key, 0) };
+  if (utilityKeys.includes(key)) { keySwitcher(key, -1) };
   heldDown = true;
 
 //  get position
