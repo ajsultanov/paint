@@ -70,6 +70,17 @@ let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
 let screenPicture = Picture.empty(24, 16, "#FFFFFF")
+let history = []
+
+function add(history, pic) {
+  if (history.length >= 5) {
+    history.shift();
+    history.push(pic);
+  }
+  else { history.push(pic) }
+}
+
+add(history, screenPicture);
 drawPicture(screenPicture, canvas, scale);
 
 function windowResize() {
@@ -190,6 +201,8 @@ function colorRefresh() {
     // console.log("NOBRITEE");
     secColor.style.color = "#fff8";
   }
+
+  hexInput.value = activeColor.slice(1);
 }
 
 const createCanvas = e => {
@@ -328,9 +341,12 @@ function drawPixel(pixelIndex) {
   console.log("drawPixel");
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
 	// console.time('draw');
-	screenPicture.pixels[pixelIndex] = activeColor;
-  console.log(pixelIndex);
-	drawPicture(screenPicture, canvas, scale);
+  let newPicture = new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels);
+  add(history, screenPicture);
+  console.log(history);
+	newPicture.pixels[pixelIndex] = activeColor;
+  // console.log(pixelIndex);
+	drawPicture(newPicture, canvas, scale);
 	// console.timeEnd('draw');
 }
 function erasePixel(pixelIndex) {
@@ -363,10 +379,12 @@ function floodFill(index, target, active) {
   else if (target === active) { return }
   else if (screenPicture.pixels[index] !== target) { return }
 
+  // logic here to return if crossing border pixel
+
+  // if ((index + 1) % (yStep) === 1 && index !== 1) { --index } ?
+  // else if (index % yStep === yStep) { ++index } ?
+
   else { screenPicture.pixels[index] = active };
-  // if border pixel, return
-  if ((index + 1) % (yStep) === 1 && index !== 1) { --index }
-  // else if (index % yStep === yStep) { ++index }
   floodFill(index + yStep, target, active);
   floodFill(index - yStep, target, active);
   floodFill(index + 1, target, active);
@@ -402,6 +420,11 @@ function colorSwap() {
   backColor = buffer;
   console.log(activeColor, backColor, buffer);
   colorRefresh();
+}
+
+function undo() {
+  console.log("undo");
+  drawPicture(screenPicture, canvas, scale);
 }
 
 
@@ -609,6 +632,11 @@ function keySwitcher(key, pixelIndex) {
       // console.log("swap");
       colorSwap();
       break;
+    case 'z':
+      // console.log("undo");
+      undo();
+      break;
+
     default:
       console.log('key:', key);
       return null;
