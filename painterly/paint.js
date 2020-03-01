@@ -363,17 +363,22 @@ function drawPicture(picture, canvas, scale) {
 //
 //
 
+function addToHistory() {
+  if (history.length > 10){
+    history.pop()
+  }
+  history.unshift(new Picture(screenPicture.width, screenPicture.height, Array.from(screenPicture.pixels)));
+}
+
+
+
+
+
 function drawPixel(pixelIndex) {
   console.log("drawPixel");
   console.log(history);
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
-  if (history.length >= 5){
-    history.pop()
-    history.unshift(new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels));
-  }
-  else {
-    history.unshift(new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels));
-  }
+  addToHistory()
 	// console.time('draw');
   console.log(history);
 	screenPicture.pixels[pixelIndex] = activeColor;
@@ -383,6 +388,7 @@ function drawPixel(pixelIndex) {
 }
 function erasePixel(pixelIndex) {
   console.log("erasePixel");
+  addToHistory()
   if (screenPicture.pixels[pixelIndex] === '#FFFFFF') { return };
   // console.time('erase');
   screenPicture.pixels[pixelIndex] = "#FFFFFF";
@@ -398,6 +404,7 @@ function drawRect() {
 
 function fillSpace(pixelIndex) {
   console.log("fillSpace");
+  addToHistory()
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
   // console.time("fill");
   let targetColor = screenPicture.pixels[pixelIndex];
@@ -456,6 +463,7 @@ function colorSwap() {
 
 function undo() {
   console.log("undo");
+  if (history.length > 0){ screenPicture = history.shift() }
   drawPicture(screenPicture, canvas, scale);
 }
 
