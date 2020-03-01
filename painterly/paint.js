@@ -171,27 +171,35 @@ function setColor(e) {
   console.log("setColor");
 	if (e.target.id === "palette") { return };
 
-	if (e.button === 0 ){
-		activeColor = `#${e.target.id}`;
-		// primColor.style.backgroundColor = activeColor;
-    colorRefresh()
-		if (brtCheck(e.target.id)) {
-			primColor.style.color = "#0008";
-		} else {
-			primColor.style.color = "#fff8";
-		}
-	} else if (e.button === 2) {
-		// e.preventDefault()
-    backColor = `#${e.target.id}`;
-		// secColor.style.backgroundColor = `#${e.target.id}`;
-    colorRefresh();
-		if (brtCheck(e.target.id)) {
-			secColor.style.color = "#0008";
-		} else {
-			secColor.style.color = "#fff8";
-		}
-	}
+  if (e.target.className === "pal-color") {
+  	if (e.button === 0 ){
+  		activeColor = `#${e.target.id}`;
+  		// primColor.style.backgroundColor = activeColor;
+      colorRefresh()
+
+  		if (brtCheck(e.target.id)) {
+  			primColor.style.color = "#0008";
+  		} else {
+  			primColor.style.color = "#fff8";
+  		}
+  	} else if (e.button === 2) {
+  		// e.preventDefault()
+      backColor = `#${e.target.id}`;
+  		// secColor.style.backgroundColor = `#${e.target.id}`;
+      colorRefresh();
+
+  		if (brtCheck(e.target.id)) {
+  			secColor.style.color = "#0008";
+  		} else {
+  			secColor.style.color = "#fff8";
+  		}
+  	}
+  }
 	//console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
+
+  if (e.target.id === "hsl") {
+
+  }
 
   hexInput.value = activeColor.slice(1);
   const {HUE, SAT, LIGHT} = getHSL(activeColor);
@@ -255,7 +263,46 @@ function getHSL(hex) {
   console.log('light:', lightness.toFixed(2));
   return({HUE: hue, SAT: saturation, LIGHT: lightness});
 }
+function getRGB(hsl) {
+  const HUE = hsl.HUE / 360;
+  const SAT = hsl.SAT;
+  const LIGHT = hsl.LIGHT;
 
+  let red = 0;
+  let grn = 0;
+  let blu = 0;
+
+  let v1
+  let v2
+
+  if (SAT === 0) {
+    red = LIGHT * 255;
+    grn = LIGHT * 255;
+    blu = LIGHT * 255;
+  }
+  else {
+    if (LIGHT < .5) { v2 = LIGHT * (1 + SAT) }
+    else { v2 = (LIGHT + SAT) - (SAT * LIGHT) }
+    v1 = 2 * LIGHT - v2;
+    red = hue2RGB(v1, v2, HUE + (1/3))
+    grn = hue2RGB(v1, v2, HUE)
+    blu = hue2RGB(v1, v2, HUE - (1/3))
+  }
+
+  function hue2RGB(v1, v2, vH) {
+    if (6 * vH < 1) { return v1 + (v2 - v1) * 6 * vH }
+    if (2 * vH < 1) { return v2 }
+    if (3 * vH < 2) { return v1 + (v2 - v1) * ((2/3) - vH) * 6 }
+    return v1;
+  }
+  red = (red*255).toString(16).slice(0,2).padStart(2, '0');
+  grn = (grn*255).toString(16).slice(0,2).padStart(2, '0');
+  blu = (blu*255).toString(16).slice(0,2).padStart(2, '0');
+  console.log(red, grn, blu);
+
+  rgb = ['#', red, grn, blu].join('')
+  return rgb;
+}
 
 function setByHex(e) {
   console.log("setByHex");
