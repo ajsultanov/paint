@@ -2,6 +2,8 @@ const contextMenu = document.querySelector('#contextMenu');
 const createForm = document.querySelector('#create');
 const scaleInput = document.querySelector('#scaleInput');
 const scaleRange = document.querySelector('#scaleRange');
+const hex = document.querySelector('#hex');
+const hexInput = hex.querySelector('#hexInput');
 const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
 const color = colorPalette.querySelector('#color');
@@ -71,10 +73,12 @@ let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 drawPicture(screenPicture, canvas, scale);
 
 function windowResize() {
+  console.log("windowResize");
 	paletteRefresh();
 	canvasRefresh();
 }
 function paletteRefresh() {
+  console.log("paletteRefresh");
 	if (palette.offsetWidth < 130) {
 		for (let color of optPaletteColors) {
 			color.style.display = 'none';
@@ -86,6 +90,7 @@ function paletteRefresh() {
 	}
 }
 function canvasRefresh() {
+  console.log("canvasRefresh");
 	canvasPos.x = canvas.getBoundingClientRect().x;
 	canvasPos.y = canvas.getBoundingClientRect().y;
 	canvasPos.width = canvas.getBoundingClientRect().width;
@@ -96,6 +101,7 @@ canvasRefresh()
 window.addEventListener('resize', windowResize)
 
 function brtCheck(color) {
+  console.log("brtCheck");
 	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
 	return brt > 200 ? 1 : 0;
 }
@@ -110,6 +116,7 @@ for (let color of paletteColors) {
 }
 
 function setColor(e) {
+  console.log("setColor");
 	if (e.target.id === "palette") { return };
 
 	if (e.button === 0 ){
@@ -138,7 +145,18 @@ function setColor(e) {
 palette.addEventListener('click', setColor)
 palette.addEventListener('contextmenu', setColor) // right click
 
+
+function setByHex(e) {
+  let hex = e.target.value;
+  console.log("setByHex", hex);
+  activeColor = `#${hex}`;
+  colorRefresh();
+};
+hexInput.addEventListener('change', setByHex);
+
+
 function colorRefresh() {
+  console.log("colorRefresh");
   primColor.style.backgroundColor = activeColor;
   secColor.style.backgroundColor = backColor;
 
@@ -147,36 +165,41 @@ function colorRefresh() {
 
   let buffColor = [activeColor[1], activeColor[1], activeColor[2], activeColor[2], activeColor[3], activeColor[3]].join("");
   if (brtCheck(buffColor)) {
-    console.log("BRITEE");
+    // console.log("BRITEE");
     primColor.style.color = "#0008";
   } else {
-    console.log("NOBRITEE");
+    // console.log("NOBRITEE");
     primColor.style.color = "#fff8";
   }
 
   let buffColor2 = [backColor[1], backColor[1], backColor[2], backColor[2], backColor[3], backColor[3]].join("");
   if (brtCheck(buffColor2)) {
-    console.log("BRITEE");
+    // console.log("BRITEE");
     secColor.style.color = "#0008";
   } else {
-    console.log("NOBRITEE");
+    // console.log("NOBRITEE");
     secColor.style.color = "#fff8";
   }
 }
 
 const createCanvas = e => {
-	e.preventDefault();
+	// e.preventDefault();
+  console.log(e);
 	if (document.activeElement.id === 'scale') { return };
 	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
 	screenPicture = pic;
 	//console.log(pic);
 	drawPicture(pic, canvas, scale)
-	activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+	// activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 	//console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
 }
 createForm.addEventListener('submit', createCanvas)
 
 const scaleChange = e => {
+
+  console.log(e);
+
+  // ***too big***
 	if (screenPicture.width * screenPicture.height > 307200) {
 		scaleInput.value = scale;
 		scaleRange.value = scale;
@@ -192,9 +215,13 @@ const scaleChange = e => {
 scaleInput.addEventListener('change', scaleChange)
 scaleRange.addEventListener('change', scaleChange)
 
-let activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+let activeColor = "#" +
+  Math.floor(Math.random() * 4096).toString(16).padStart(3, "0") +
+  Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 //console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
-let backColor = '#' + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+let backColor = "#" +
+  Math.floor(Math.random() * 4096).toString(16).padStart(3, "0") +
+  Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 colorRefresh();
 
 //
@@ -252,6 +279,7 @@ colorRefresh();
 //
 
 function drawPicture(picture, canvas, scale) {
+  console.log("drawPicture");
   canvas.width = picture.width * scale;
   canvas.height = picture.height * scale;
   // CanvasRenderingContext2D
@@ -286,6 +314,7 @@ function drawPicture(picture, canvas, scale) {
 //
 
 function drawPixel(pixelIndex) {
+  console.log("drawPixel");
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
 	// console.time('draw');
 	screenPicture.pixels[pixelIndex] = activeColor;
@@ -294,6 +323,7 @@ function drawPixel(pixelIndex) {
 	// console.timeEnd('draw');
 }
 function erasePixel(pixelIndex) {
+  console.log("erasePixel");
   if (screenPicture.pixels[pixelIndex] === '#FFFFFF') { return };
   // console.time('erase');
   screenPicture.pixels[pixelIndex] = "#FFFFFF";
@@ -308,6 +338,7 @@ function drawRect() {
 }
 
 function fillSpace(pixelIndex) {
+  console.log("fillSpace");
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
   // console.time("fill");
   let targetColor = screenPicture.pixels[pixelIndex];
@@ -318,8 +349,9 @@ function fillSpace(pixelIndex) {
 function floodFill(index, target, active) {
   let yStep = screenPicture.width;
   if (index % (yStep - 1) === -1) { return }
-  if (target === active) { return }
+  else if (target === active) { return }
   else if (screenPicture.pixels[index] !== target) { return }
+
   else { screenPicture.pixels[index] = active };
   // if border pixel, return
   if ((index + 1) % (yStep) === 1 && index !== 1) { --index }
@@ -348,13 +380,16 @@ function superWand() {
 }
 
 function getColor(pixelIndex) {
+  console.log("getColor");
   activeColor = screenPicture.pixels[pixelIndex];
   colorRefresh();
 }
 function colorSwap() {
+  console.log("colorSwap");
   let buffer = activeColor;
   activeColor = backColor;
   backColor = buffer;
+  console.log(activeColor, backColor, buffer);
   colorRefresh();
 }
 
@@ -457,6 +492,7 @@ document.addEventListener('keydown', e => {
 const utilityKeys = ['z', 'x']
 // keydown event handler
 function keyHandler(e) {
+  console.log("keyHandler");
   key = e.key;
   if (utilityKeys.includes(key)) { keySwitcher(key, 0) };
   heldDown = true;
@@ -522,6 +558,7 @@ canvas.addEventListener('mousemove', e => {
 //    diff: save and continue
 
 function keySwitcher(key, pixelIndex) {
+  console.log("keySwitcher");
   switch(key) {
 //  draw
     case 'w':
@@ -530,13 +567,13 @@ function keySwitcher(key, pixelIndex) {
 //    set pixels[pixelIndex] to activeColor
 //  erase
     case 'a':
-      console.log("erase");
+      // console.log("erase");
       erasePixel(pixelIndex);
       break;
 //    set pixels[pixelIndex] to FFF
 //  fill
     case 'f':
-      console.log("fill");
+      // console.log("fill");
       fillSpace(pixelIndex);
       break;
 //  line
@@ -545,7 +582,7 @@ function keySwitcher(key, pixelIndex) {
 //    set on keyup
 //  sample
     case 'q':
-      console.log("dropper");
+      // console.log("dropper");
       getColor(pixelIndex);
       break;
 //    set activeColor
@@ -558,7 +595,7 @@ function keySwitcher(key, pixelIndex) {
 //  undo...
 //    hmm
     case 'x':
-      console.log("swap");
+      // console.log("swap");
       colorSwap();
       break;
     default:
