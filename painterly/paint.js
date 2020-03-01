@@ -2,8 +2,6 @@ const contextMenu = document.querySelector('#contextMenu');
 const createForm = document.querySelector('#create');
 const scaleInput = document.querySelector('#scaleInput');
 const scaleRange = document.querySelector('#scaleRange');
-const hex = document.querySelector('#hex');
-const hexInput = hex.querySelector('#hexInput');
 const toolbar = document.querySelector('#toolbar');
 const colorPalette = toolbar.querySelector('#colorPalette');
 const color = colorPalette.querySelector('#color');
@@ -17,6 +15,12 @@ const canvasDiv = document.querySelector('#canvas');
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 const canvasPos = {x:0, y:0, width:0, height:0};
+const hex = document.querySelector('#hex');
+const hexInput = hex.querySelector('#hexInput');
+const hsl = document.querySelector('#hsl');
+const hueRange = hsl.querySelector('#hueRange');
+const satRange = hsl.querySelector('#satRange');
+const lightRange = hsl.querySelector('#lightRange');
 canvasDiv.appendChild(canvas);
 
 // let arr1 = [1,2,3], arr3 = [4,5,6], arr5 = [7,8,9]
@@ -190,10 +194,67 @@ function setColor(e) {
 	//console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
 
   hexInput.value = activeColor.slice(1);
+  const {HUE, SAT, LIGHT} = getHSL(activeColor);
+  hueRange.value = HUE;
+  satRange.value = SAT * 100;
+  lightRange.value = LIGHT * 100;
+
 	return false;		// disables context menu from actually appearing
 }
 palette.addEventListener('click', setColor)
 palette.addEventListener('contextmenu', setColor) // right click
+
+
+function getHSL(hex) {
+  console.log('getHSL');
+  if (hex[0] === '#') { hex = hex.slice(1) }
+
+  let red = parseInt(hex.slice(0, 2), 16)/255;
+  let grn = parseInt(hex.slice(2, 4), 16)/255;
+  let blu = parseInt(hex.slice(4, 6), 16)/255;
+  // console.log(red, grn, blu);
+  let max = Math.max(red, grn, blu);
+  let min = Math.min(red, grn, blu);
+  let range = max - min;
+  let total = max + min;
+  let totalFromTwo = 2 - total;
+  let lightness = (total / 2);
+  let saturation = 0;
+  if (lightness > .5) {
+    saturation = range / total;
+  }
+  else {
+    saturation = range / totalFromTwo;
+  }
+  let hue = 0;
+  let maxColor = "";
+  if (Math.max(red, grn, blu) === red) {
+    maxColor = "red";
+    hue = ((grn - blu) / range) * 60;
+  }
+  else if (Math.max(red, grn, blu) === grn) {
+    maxColor = "green";
+    hue = (2 + (blu - red) / range) * 60;
+  }
+  else if (Math.max(red, grn, blu) === blu){
+    maxColor = "blue";
+    hue = (4 + (red - grn) / range) * 60;
+  }
+  else { console.log("uh oh") }
+
+  if (hue < 0) {
+    hue += 360;
+  }
+  if (hue > 15 && hue < 25) { maxColor = "orange"}
+  if (hue > 45 && hue < 75) { maxColor = "yellow"}
+  if (hue > 165 && hue < 195) { maxColor = "cyan"}
+  if (hue > 255 && hue < 295) { maxColor = "purple"}
+  if (hue > 295 && hue < 335) { maxColor = "pink"}
+  console.log('hue:', hue.toFixed(2), `(${maxColor})`);
+  console.log('sat:', saturation.toFixed(2));
+  console.log('light:', lightness.toFixed(2));
+  return({HUE: hue, SAT: saturation, LIGHT: lightness});
+}
 
 
 function setByHex(e) {
