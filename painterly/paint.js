@@ -69,19 +69,56 @@ class Picture {
 let scale = 15;
 scaleInput.value = scale;
 scaleRange.value = scale;
-let screenPicture = Picture.empty(24, 16, "#FFFFFF")
+// let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 let history = []
 
-function add(history, pic) {
-  if (history.length >= 5) {
-    history.shift();
-    history.push(pic);
-  }
-  else { history.push(pic) }
-}
 
-add(history, screenPicture);
-drawPicture(screenPicture, canvas, scale);
+//  //
+//
+//  //
+//
+//
+
+//  //
+//
+//  //
+
+//
+
+//  //
+//
+//
+
+//
+//
+//
+
+//
+
+const createCanvas = (width, height) => {
+
+  // console.log(e);
+	if (document.activeElement.id === 'scale') { return };
+	screenPicture = Picture.empty(width, height, '#FFFFFF');
+  // add(history, screenPicture)
+  history = [];
+  history.unshift(new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels));
+	drawPicture(screenPicture, canvas, scale);
+  console.log(history);
+	// activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
+	//console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
+}
+createForm.addEventListener('submit', e => {
+  e.preventDefault();
+  let width = parseInt(e.target.width.value, 10);
+  let height = parseInt(e.target.height.value, 10);
+  createCanvas(width, height)
+})
+
+
+// add(history, screenPicture);
+createCanvas(24, 16);
+// drawPicture(screenPicture, canvas, scale);
 
 function windowResize() {
   console.log("windowResize");
@@ -205,18 +242,7 @@ function colorRefresh() {
   hexInput.value = activeColor.slice(1);
 }
 
-const createCanvas = e => {
-	// e.preventDefault();
-  console.log(e);
-	if (document.activeElement.id === 'scale') { return };
-	let pic = Picture.empty(e.target.width.value, e.target.height.value, '#FFFFFF');
-	screenPicture = pic;
-	//console.log(pic);
-	drawPicture(pic, canvas, scale)
-	// activeColor = "#" + Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
-	//console.log(`%c${activeColor}`, `font-size:18px;background-color:${activeColor};`);
-}
-createForm.addEventListener('submit', createCanvas)
+
 
 const scaleChange = e => {
 
@@ -339,14 +365,20 @@ function drawPicture(picture, canvas, scale) {
 
 function drawPixel(pixelIndex) {
   console.log("drawPixel");
-  if (screenPicture.pixels[pixelIndex] === activeColor) { return };
-	// console.time('draw');
-  let newPicture = new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels);
-  add(history, screenPicture);
   console.log(history);
-	newPicture.pixels[pixelIndex] = activeColor;
+  if (screenPicture.pixels[pixelIndex] === activeColor) { return };
+  if (history.length >= 5){
+    history.pop()
+    history.unshift(new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels));
+  }
+  else {
+    history.unshift(new Picture(screenPicture.width, screenPicture.height, screenPicture.pixels));
+  }
+	// console.time('draw');
+  console.log(history);
+	screenPicture.pixels[pixelIndex] = activeColor;
   // console.log(pixelIndex);
-	drawPicture(newPicture, canvas, scale);
+	drawPicture(screenPicture, canvas, scale);
 	// console.timeEnd('draw');
 }
 function erasePixel(pixelIndex) {
