@@ -19,6 +19,9 @@ const hex = document.querySelector('#hex');
 const hexInput = hex.querySelector('#hexInput');
 const hsl = document.querySelector('#hsl');
 const hueRange = hsl.querySelector('#hueRange');
+const hueNum = hsl.querySelector('#hueNum');
+const satNum = hsl.querySelector('#satNum');
+const lightNum = hsl.querySelector('#lightNum');
 const satRange = hsl.querySelector('#satRange');
 const lightRange = hsl.querySelector('#lightRange');
 canvasDiv.appendChild(canvas);
@@ -70,7 +73,7 @@ class Picture {
     return new Picture(this.width, this.height, copy);
   }
 }
-let scale = 15;
+let scale = 25;
 scaleInput.value = scale;
 scaleRange.value = scale;
 // let screenPicture = Picture.empty(24, 16, "#FFFFFF")
@@ -171,7 +174,7 @@ function setColor(e) {
   console.log("setColor");
 	if (e.target.id === "palette") { return };
 
-  if (e.target.className === "pal-color") {
+  if (e.target.className.match(/pal-color/)) {
   	if (e.button === 0 ){
   		activeColor = `#${e.target.id}`;
   		// primColor.style.backgroundColor = activeColor;
@@ -202,6 +205,9 @@ function setColor(e) {
   hueRange.value = HUE;
   satRange.value = SAT * 100;
   lightRange.value = LIGHT * 100;
+  hueNum.innerText = `${Math.round(HUE)}`;
+  satNum.innerText = `${Math.round(SAT * 100, 2)}`;
+  lightNum.innerText = `${Math.round(LIGHT * 100)}`
 
 	return false;		// disables context menu from actually appearing
 }
@@ -217,6 +223,9 @@ function setByHSL(e) {
   hueRange.value = HUE;
   satRange.value = SAT * 100;
   lightRange.value = LIGHT * 100;
+  hueNum.innerText = `${Math.round(HUE)}`;
+  satNum.innerText = `${Math.round(SAT * 100, 2)}`;
+  lightNum.innerText = `${Math.round(LIGHT * 100)}`
 }
 hsl.addEventListener('change', setByHSL)
 
@@ -429,6 +438,9 @@ const {HUE, SAT, LIGHT} = getHSL(activeColor);
 hueRange.value = HUE;
 satRange.value = SAT * 100;
 lightRange.value = LIGHT * 100;
+hueNum.innerText = `${Math.round(HUE)}`;
+satNum.innerText = `${Math.round(SAT * 100, 2)}`;
+lightNum.innerText = `${Math.round(LIGHT * 100)}`
 hexInput.value = activeColor.slice(1);
 //
 //
@@ -607,6 +619,13 @@ function getColor(pixelIndex) {
   console.log("getColor");
   activeColor = screenPicture.pixels[pixelIndex];
   colorRefresh();
+  const {HUE, SAT, LIGHT} = getHSL(activeColor);
+  hueRange.value = HUE;
+  satRange.value = SAT * 100;
+  lightRange.value = LIGHT * 100;
+  hueNum.innerText = `${Math.round(HUE)}`;
+  satNum.innerText = `${Math.round(SAT * 100, 2)}`;
+  lightNum.innerText = `${Math.round(LIGHT * 100)}`
 }
 function colorSwap() {
   console.log("colorSwap");

@@ -170,6 +170,13 @@ form {
 	background-color: #fff8;
 }
 
+#hsl {
+	/* width: 90vw; */
+	grid-column: tool-start / canvas-end;
+	border: 1px solid black;
+	padding: 5px;
+	font-size: .75em;
+}
 #hueSwatch {
 	margin: 5px;
 	height: 1.2em;
@@ -194,8 +201,20 @@ form {
 	display: inline-grid;
 	/* make two cells, 000, FFF */
 }
+.hslNum {
+	display: inline-block;
+	font-family: Courier New;
+	padding: 2px;
+	width: 2.5em;
+	background-color: #ccc;
+	border: 1px solid #aaa;
+	border-radius: 2px;
+	text-align: right;
+}
 
-
+#hex {
+	grid-column: tool-start / tool-end;
+}
 
 
 

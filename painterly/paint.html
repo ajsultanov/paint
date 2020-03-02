@@ -100,20 +100,27 @@
       </div>
 		</div>
 
+
+
+
+    <form class="" id="hsl">
+      <label for="hue">Hue</label>
+        <span id="hueSwatch">&nbsp</span><div class="hslNum" id="hueNum">x</div>
+      <input type="range" name="hue" value="0" id="hueRange" min="0" max="359">
+      <label for="sat">Saturation</label>
+        <span id="satSwatch">&nbsp</span><span class="hslNum" id="satNum">y</span>
+      <input type="range" name="sat" value="100" id="satRange" min="0" max="100">
+      <label for="light">Lightness</label>
+        <span id="lightSwatch">&nbsp</span><span class="hslNum" id="lightNum">z</span>
+      <input type="range" name="light" value="50" id="lightRange" min="0" max="100">
+    </form>
+
+    <br/>
+
     <form class="" id="hex">
       <label for="scale">&nbsp;#</label>
       <input type="text" name="hex" value="FFFFFF" id="hexInput">
       <input type="submit" disabled>
-    </form>
-
-
-    <form class="" id="hsl">
-      <label for="hue">Hue</label><span id="hueSwatch">&nbsp</span>
-      <input type="range" name="hue" value="0" id="hueRange" min="0" max="359">
-      <label for="sat">Saturation</label><span id="satSwatch">&nbsp</span>
-      <input type="range" name="sat" value="100" id="satRange" min="0" max="100">
-      <label for="light">Lightness</label><span id="lightSwatch">&nbsp</span>
-      <input type="range" name="light" value="50" id="lightRange" min="0" max="100">
     </form>
 	</div>
 
