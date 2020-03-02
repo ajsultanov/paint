@@ -158,10 +158,10 @@ form {
 }
 
 #infoBar {
-grid-column: tool-start / canvas-end;
-grid-row: 3 / 4;
-padding: 5px;
-background-color: #88c;
+	grid-column: tool-start / canvas-end;
+	grid-row: 3 / 4;
+	padding: 5px;
+	background-color: #88c;
 }
 
 .item {
@@ -170,6 +170,30 @@ background-color: #88c;
 	background-color: #fff8;
 }
 
+#hueSwatch {
+	margin: 5px;
+	height: 1.2em;
+	width: 1.2em;
+	background-color: red;
+	display: inline-grid;
+	/* make four cells, r, y, g, b */
+}
+#satSwatch {
+	margin: 5px;
+	height: 1.2em;
+	width: 1.2em;
+	background-color: green;
+	display: inline-grid;
+	/* make two cells, 808080, 0F0 */
+}
+#lightSwatch {
+	margin: 5px;
+	height: 1.2em;
+	width: 1.2em;
+	background-color: blue;
+	display: inline-grid;
+	/* make two cells, 000, FFF */
+}
 
 
 

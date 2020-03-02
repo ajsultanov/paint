@@ -425,7 +425,10 @@ let backColor = "#" +
   Math.floor(Math.random() * 4096).toString(16).padStart(3, "0") +
   Math.floor(Math.random() * 4096).toString(16).padStart(3, "0");
 colorRefresh();
-
+const {HUE, SAT, LIGHT} = getHSL(activeColor);
+hueRange.value = HUE;
+satRange.value = SAT * 100;
+lightRange.value = LIGHT * 100;
 hexInput.value = activeColor.slice(1);
 //
 //
