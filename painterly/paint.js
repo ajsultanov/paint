@@ -197,10 +197,6 @@ function setColor(e) {
   }
 	//console.log(`%cselected color: %c${e.target.id}`, "font-size:12px;color:black",`font-size:18px;color:${activeColor}`);
 
-  if (e.target.id === "hsl") {
-
-  }
-
   hexInput.value = activeColor.slice(1);
   const {HUE, SAT, LIGHT} = getHSL(activeColor);
   hueRange.value = HUE;
@@ -212,6 +208,17 @@ function setColor(e) {
 palette.addEventListener('click', setColor)
 palette.addEventListener('contextmenu', setColor) // right click
 
+function setByHSL(e) {
+  activeColor = getRGB({HUE: hueRange.value, SAT: satRange.value/100, LIGHT: lightRange.value/100});
+  colorRefresh();
+
+  hexInput.value = activeColor.slice(1);
+  const {HUE, SAT, LIGHT} = getHSL(activeColor);
+  hueRange.value = HUE;
+  satRange.value = SAT * 100;
+  lightRange.value = LIGHT * 100;
+}
+hsl.addEventListener('change', setByHSL)
 
 function getHSL(hex) {
   console.log('getHSL');
@@ -232,7 +239,7 @@ function getHSL(hex) {
   let hue = 0;
   let maxColor = "";
   if (delta !== 0) {
-    if (lightness > .5) {
+    if (lightness < .5) {
       saturation = delta / total;
     }
     else {
@@ -262,12 +269,12 @@ function getHSL(hex) {
   if (hue > 165 && hue < 195) { maxColor = "cyan" }
   if (hue > 255 && hue < 295) { maxColor = "purple" }
   if (hue > 295 && hue < 335) { maxColor = "pink" }
-  console.log('hue:', hue.toFixed(2), `(${maxColor})`);
+  console.log('hue:', hue.toFixed(0), `(${maxColor})`);
   console.log('sat:', saturation.toFixed(2));
   console.log('light:', lightness.toFixed(2));
   return(
     {
-      HUE: Number.parseFloat(hue.toFixed(2)),
+      HUE: Number.parseFloat(hue.toFixed(0)),
       SAT: Number.parseFloat(saturation.toFixed(2)),
       LIGHT: Number.parseFloat(lightness.toFixed(2))
     }
@@ -278,12 +285,14 @@ function getRGB(hsl) {
   const HUE = hsl.HUE;
   const SAT = hsl.SAT;
   const LIGHT = hsl.LIGHT;
-  console.log("hue:", HUE, "sat:", SAT, "light:", LIGHT);
+  // console.log("hue:", HUE, "sat:", SAT, "light:", LIGHT);
 
   let red = 0;
   let grn = 0;
   let blu = 0;
 
+  // from niwa
+  // http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/
   let tempVar1;
   let huePerc = HUE / 360;
 
@@ -293,17 +302,19 @@ function getRGB(hsl) {
     blu = Math.round(255 * LIGHT);
   }
   if (LIGHT < .5) {
-    tempVar1 = LIGHT * SAT
+    tempVar1 = LIGHT * (1 + SAT)
   }
   else {
     tempVar1 = LIGHT + SAT - LIGHT * SAT
   }
   let tempVar2 = 2 * LIGHT - tempVar1;
-  let tempRed = HUE + 1/3;
-  let tempGrn = HUE;
-  let tempBlu = HUE - 1/3;
+  // console.log("temps:", tempVar1, tempVar2);
+  let tempRed = huePerc + 1/3;
+  let tempGrn = huePerc;
+  let tempBlu = huePerc - 1/3;
+  // console.log("tempColors:", tempRed, tempGrn, tempBlu);
 
-  function flatten(tempColor) {
+  function convert(tempColor) {
     let color;
     if (tempColor < 0) {
       tempColor += 1;
@@ -321,92 +332,18 @@ function getRGB(hsl) {
       color = tempVar2 + (tempVar1 - tempVar2) * (2/3 - tempColor) * 6;
     }
     else { color = tempVar2 }
+    // console.log("color:", color.toFixed(2));
     return Math.round(color * 255);
   }
-  red = flatten(tempRed);
-  grn = flatten(tempGrn);
-  blu = flatten(tempBlu);
+  red = convert(tempRed);
+  grn = convert(tempGrn);
+  blu = convert(tempBlu);
 
-  {
-  // from rapidtables
-  // let varC = (1 - Math.abs(2 * LIGHT - 1)) * SAT;
-  // // closer lightness is to .5, higher varC will be
-  // // how lightness affects saturation
-  // let varX = varC * (1 - Math.abs((HUE / 60) % 2 - 1));
-  // // .5-> x=.5c 3->x=1c 5.5->x=.5c .25-> x=.25c 4.8->x=.8c
-  // // higher the closer to 0, 120, 240 from below
-  // let varM = LIGHT - varC / 2;
-  // //
-  // console.log("C:", varC,"X:", varX, "M:", varM);
-  //
-  // let varR, varG, varB;
-  // if (HUE >= 0 && HUE < 60) {
-  //   varR = varC;
-  //   varG = varX;
-  //   varB = 0;
-  // }
-  // if (HUE >= 60 && HUE < 120) {
-  //   varR = varX;
-  //   varG = varC;
-  //   varB = 0;
-  // }
-  // if (HUE >= 120 && HUE < 180) {
-  //   varR = 0;
-  //   varG = varC;
-  //   varB = varX;
-  // }
-  // if (HUE >= 180 && HUE < 240) {
-  //   varR = 0;
-  //   varG = varX;
-  //   varB = varC;
-  // }
-  // if (HUE >= 240 && HUE < 300) {
-  //   varR = varX;
-  //   varG = 0;
-  //   varB = varC;
-  // }
-  // if (HUE >= 300 && HUE < 360) {
-  //   varR = varC;
-  //   varG = 0;
-  //   varB = varX;
-  // }
-  // red = Math.round((varR + varM) * 255).toString(16).padEnd(2, "0");
-  // grn = Math.round((varG + varM) * 255).toString(16).padEnd(2, "0");
-  // blu = Math.round((varB + varM) * 255).toString(16).padEnd(2, "0");
-  }
-
-  {
-  // this is all from easyrgb.com ...
-  // let v1
-  // let v2
-  // if (SAT === 0) {
-  //   red = LIGHT * 255;
-  //   grn = LIGHT * 255;
-  //   blu = LIGHT * 255;
-  // }
-  // else {
-  //   if (LIGHT < .5) { v2 = LIGHT * (1 + SAT) }
-  //   else { v2 = (LIGHT + SAT) - (SAT * LIGHT) }
-  //   v1 = 2 * LIGHT - v2;
-  //   red = hue2RGB(v1, v2, HUE + 2)
-  //   grn = hue2RGB(v1, v2, HUE)
-  //   blu = hue2RGB(v1, v2, HUE - 2)
-  // }
-  // function hue2RGB(v1, v2, vH) {
-  //   if (6 * vH < 1) { return v1 + (v2 - v1) * 6 * vH }
-  //   if (2 * vH < 1) { return v2 }
-  //   if (3 * vH < 2) { return v1 + (v2 - v1) * (4- vH) * 6 }
-  //   return v1;
-  // }
-  // red = (red).toString(16).slice(0,2).padStart(2, '0');
-  // grn = (grn).toString(16).slice(0,2).padStart(2, '0');
-  // blu = (blu).toString(16).slice(0,2).padStart(2, '0');
-}
   console.log("red:", red, "green:", grn, "blue:", blu);
 
-  red = red.toString(16).padEnd(2, "0");
-  grn = grn.toString(16).padEnd(2, "0");
-  blu = blu.toString(16).padEnd(2, "0");
+  red = red.toString(16).padStart(2, "0");
+  grn = grn.toString(16).padStart(2, "0");
+  blu = blu.toString(16).padStart(2, "0");
 
   rgb = ['#', red, grn, blu].join('')
   return rgb;
