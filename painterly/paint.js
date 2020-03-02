@@ -284,45 +284,96 @@ function getRGB(hsl) {
   let grn = 0;
   let blu = 0;
 
-  let varC = (1 - Math.abs(2 * LIGHT - 1)) * SAT;
-  let varX = varC * (1 - Math.abs((HUE / 60) % 2 - 1));
-  let varM = LIGHT - varC / 2;
-  console.log("C:", varC,"X:", varX, "M:", varM);
+  let tempVar1;
+  let huePerc = HUE / 360;
 
-  let varR, varG, varB;
-  if (HUE >= 0 && HUE < 60) {
-    varR = varC;
-    varG = varX;
-    varB = 0;
+  if (SAT === 0) {
+    red = Math.round(255 * LIGHT);
+    grn = Math.round(255 * LIGHT);
+    blu = Math.round(255 * LIGHT);
   }
-  if (HUE >= 60 && HUE < 120) {
-    varR = varX;
-    varG = varC;
-    varB = 0;
+  if (LIGHT < .5) {
+    tempVar1 = LIGHT * SAT
   }
-  if (HUE >= 120 && HUE < 180) {
-    varR = 0;
-    varG = varC;
-    varB = varX;
+  else {
+    tempVar1 = LIGHT + SAT - LIGHT * SAT
   }
-  if (HUE >= 180 && HUE < 240) {
-    varR = 0;
-    varG = varX;
-    varB = varC;
+  let tempVar2 = 2 * LIGHT - tempVar1;
+  let tempRed = HUE + 1/3;
+  let tempGrn = HUE;
+  let tempBlu = HUE - 1/3;
+
+  function flatten(tempColor) {
+    let color;
+    if (tempColor < 0) {
+      tempColor += 1;
+    }
+    else if (tempColor > 1) {
+      tempColor -= 1;
+    }
+    if (6 * tempColor < 1) {
+      color = tempVar2 + (tempVar1 - tempVar2) * 6 * tempColor;
+    }
+    else if (2 * tempColor < 1) {
+      color = tempVar1;
+    }
+    else if (3 * tempColor < 2) {
+      color = tempVar2 + (tempVar1 - tempVar2) * (2/3 - tempColor) * 6;
+    }
+    else { color = tempVar2 }
+    return Math.round(color * 255);
   }
-  if (HUE >= 240 && HUE < 300) {
-    varR = varX;
-    varG = 0;
-    varB = varC;
+  red = flatten(tempRed);
+  grn = flatten(tempGrn);
+  blu = flatten(tempBlu);
+
+  {
+  // from rapidtables
+  // let varC = (1 - Math.abs(2 * LIGHT - 1)) * SAT;
+  // // closer lightness is to .5, higher varC will be
+  // // how lightness affects saturation
+  // let varX = varC * (1 - Math.abs((HUE / 60) % 2 - 1));
+  // // .5-> x=.5c 3->x=1c 5.5->x=.5c .25-> x=.25c 4.8->x=.8c
+  // // higher the closer to 0, 120, 240 from below
+  // let varM = LIGHT - varC / 2;
+  // //
+  // console.log("C:", varC,"X:", varX, "M:", varM);
+  //
+  // let varR, varG, varB;
+  // if (HUE >= 0 && HUE < 60) {
+  //   varR = varC;
+  //   varG = varX;
+  //   varB = 0;
+  // }
+  // if (HUE >= 60 && HUE < 120) {
+  //   varR = varX;
+  //   varG = varC;
+  //   varB = 0;
+  // }
+  // if (HUE >= 120 && HUE < 180) {
+  //   varR = 0;
+  //   varG = varC;
+  //   varB = varX;
+  // }
+  // if (HUE >= 180 && HUE < 240) {
+  //   varR = 0;
+  //   varG = varX;
+  //   varB = varC;
+  // }
+  // if (HUE >= 240 && HUE < 300) {
+  //   varR = varX;
+  //   varG = 0;
+  //   varB = varC;
+  // }
+  // if (HUE >= 300 && HUE < 360) {
+  //   varR = varC;
+  //   varG = 0;
+  //   varB = varX;
+  // }
+  // red = Math.round((varR + varM) * 255).toString(16).padEnd(2, "0");
+  // grn = Math.round((varG + varM) * 255).toString(16).padEnd(2, "0");
+  // blu = Math.round((varB + varM) * 255).toString(16).padEnd(2, "0");
   }
-  if (HUE >= 300 && HUE < 360) {
-    varR = varC;
-    varG = 0;
-    varB = varX;
-  }
-  red = Math.round((varR + varM) * 255).toString(16).padEnd(2, "0");
-  grn = Math.round((varG + varM) * 255).toString(16).padEnd(2, "0");
-  blu = Math.round((varB + varM) * 255).toString(16).padEnd(2, "0");
 
   {
   // this is all from easyrgb.com ...
@@ -352,6 +403,10 @@ function getRGB(hsl) {
   // blu = (blu).toString(16).slice(0,2).padStart(2, '0');
 }
   console.log("red:", red, "green:", grn, "blue:", blu);
+
+  red = red.toString(16).padEnd(2, "0");
+  grn = grn.toString(16).padEnd(2, "0");
+  blu = blu.toString(16).padEnd(2, "0");
 
   rgb = ['#', red, grn, blu].join('')
   return rgb;
