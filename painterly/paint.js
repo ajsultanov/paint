@@ -76,7 +76,7 @@ class Picture {
 let scale = 25;
 scaleInput.value = scale;
 scaleRange.value = scale;
-// let screenPicture = Picture.empty(24, 16, "#FFFFFF")
+let screenPicture = Picture.empty(24, 16, "#FFFFFF")
 let history = []
 
 

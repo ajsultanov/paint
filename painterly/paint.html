@@ -5,7 +5,7 @@
   <title>Vanilla Paint</title>
   <meta name="description" content="Pixel Art Editor">
 	<link rel="stylesheet" href="paint.css">
-	<link rel="icon" type="image/png" href="palette16.png">
+	<link rel="icon" type="image/png" href="img/palette16.png">
   <style media="screen">
     html {
       /* background-color: #cce; */
@@ -65,25 +65,25 @@
 			</div>
       <div class="tool-wrapper">
   			<div class="tool">
-          <img src="ink.png" alt="Q ink">
+          <img src="img/ink.png" alt="Q ink">
   			</div>
   			<div class="tool">
-          <img src="pencil.png" alt="W pencil">
+          <img src="img/pencil.png" alt="W pencil">
   			</div>
   			<div class="tool">
-          <img src="line.png" alt="E line">
+          <img src="img/line.png" alt="E line">
   			</div>
         <div class="tool">
-          <img src="eraser.png" alt="A eraser">
+          <img src="img/eraser.png" alt="A eraser">
   			</div>
         <div class="tool">
-          <img src="dropper.png" alt="S dropper">
+          <img src="img/dropper.png" alt="S dropper">
   			</div>
         <div class="tool">
-          <img src="marquee.png" alt="D marquee">
+          <img src="img/marquee.png" alt="D marquee">
   			</div>
         <div class="tool">
-          <img src="square.png" alt="Z square">
+          <img src="img/square.png" alt="Z square">
   			</div>
       </div>
 		</div>
@@ -93,36 +93,35 @@
       </div>
 		</div>
 		<div id="canvas">
-		</div>
+		</diimg/v>
     <div id="infoBar">
       <div class="item">
         InfoBar - Item
       </div>
 		</div>
 
-
-
-
-    <form class="" id="hsl">
-      <label for="hue">Hue</label>
-        <span id="hueSwatch">&nbsp</span><div class="hslNum" id="hueNum">x</div>
-      <input type="range" name="hue" value="0" id="hueRange" min="0" max="359">
-      <label for="sat">Saturation</label>
-        <span id="satSwatch">&nbsp</span><span class="hslNum" id="satNum">y</span>
-      <input type="range" name="sat" value="100" id="satRange" min="0" max="100">
-      <label for="light">Lightness</label>
-        <span id="lightSwatch">&nbsp</span><span class="hslNum" id="lightNum">z</span>
-      <input type="range" name="light" value="50" id="lightRange" min="0" max="100">
-    </form>
-
-    <br/>
-
-    <form class="" id="hex">
-      <label for="scale">&nbsp;#</label>
-      <input type="text" name="hex" value="FFFFFF" id="hexInput">
-      <input type="submit" disabled>
-    </form>
 	</div>
+  <form class="" id="hsl">
+    <label for="hue">Hue</label>
+      <span id="hueSwatch">&nbsp</span><div class="hslNum" id="hueNum">x</div>
+    <input type="range" name="hue" value="0" id="hueRange" min="0" max="359">
+    <label for="sat">Saturation</label>
+      <span id="satSwatch">&nbsp</span><span class="hslNum" id="satNum">y</span>
+    <input type="range" name="sat" value="100" id="satRange" min="0" max="100">
+    <label for="light">Lightness</label>
+      <span id="lightSwatch">&nbsp</span><span class="hslNum" id="lightNum">z</span>
+    <input type="range" name="light" value="50" id="lightRange" min="0" max="100">
+  </form>
+
+  <br/>
+
+  <form class="" id="hex">
+    <label for="scale">&nbsp;#</label>
+    <input type="text" name="hex" value="FFFFFF" id="hexInput">
+    <input type="submit" disabled>
+  </form>
+
+  <script src="paint.js"></script>
 
 
 <!-- grid experiment stuff
@@ -162,6 +161,5 @@
   </div>
 -->
 
-	<script src="paint.js"></script>
 </body>
 </html>
