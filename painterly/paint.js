@@ -26,6 +26,11 @@ const satRange = hsl.querySelector('#satRange');
 const lightRange = hsl.querySelector('#lightRange');
 canvasDiv.appendChild(canvas);
 
+// import Picture
+// import keyHandling
+// import tools
+// import colorTools
+
 // let arr1 = [1,2,3], arr3 = [4,5,6], arr5 = [7,8,9]
 //
 // let arr2 = [...arr1]
