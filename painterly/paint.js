@@ -17,6 +17,7 @@ const ctx = canvas.getContext('2d');
 const canvasPos = {x:0, y:0, width:0, height:0};
 const hex = document.querySelector('#hex');
 const hexInput = hex.querySelector('#hexInput');
+const colorInput = hex.querySelector('#colorInput');
 const hsl = document.querySelector('#hsl');
 const hueRange = hsl.querySelector('#hueRange');
 const hueNum = hsl.querySelector('#hueNum');
@@ -25,6 +26,7 @@ const lightNum = hsl.querySelector('#lightNum');
 const satRange = hsl.querySelector('#satRange');
 const lightRange = hsl.querySelector('#lightRange');
 canvasDiv.appendChild(canvas);
+
 
 // import Picture
 // import keyHandling
@@ -378,6 +380,22 @@ function setByHex(e) {
   colorRefresh();
 };
 hexInput.addEventListener('change', setByHex);
+
+function setByColor(e) {
+  activeColor = '#' + e.target.value.slice(1);
+
+  colorRefresh();
+
+  hexInput.value = activeColor.slice(1);
+  const {HUE, SAT, LIGHT} = getHSL(activeColor);
+  hueRange.value = HUE;
+  satRange.value = SAT * 100;
+  lightRange.value = LIGHT * 100;
+  hueNum.innerText = `${Math.round(HUE)}`;
+  satNum.innerText = `${Math.round(SAT * 100, 2)}`;
+  lightNum.innerText = `${Math.round(LIGHT * 100)}`
+};
+colorInput.addEventListener('input', setByColor);
 
 
 function colorRefresh() {
