@@ -165,6 +165,7 @@ window.addEventListener('resize', windowResize)
 function brtCheck(color) {
   console.log("brtCheck");
 	let brt = Number.parseInt(color.slice(0, 2), 16) + Number.parseInt(color.slice(2, 4), 16) + Number.parseInt(color.slice(4, 6), 16);
+  // console.log(color, brt);
 	return brt > 200 ? 1 : 0;
 }
 
@@ -567,11 +568,11 @@ function addToHistory() {
 
 function drawPixel(pixelIndex) {
   console.log("drawPixel");
-  console.log(history);
+  // console.log(history);
   if (screenPicture.pixels[pixelIndex] === activeColor) { return };
   addToHistory()
 	// console.time('draw');
-  console.log(history);
+  // console.log(history);
 	screenPicture.pixels[pixelIndex] = activeColor;
   // console.log(pixelIndex);
 	drawPicture(screenPicture, canvas, scale);
