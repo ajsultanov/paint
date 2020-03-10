@@ -15,7 +15,7 @@ form {
 
 	display: grid;
 	grid-template-columns: [tool-start] minmax(100px, 260px) [tool-end canvas-start] minmax(640px, 800px) [canvas-end];
-	grid-template-rows: 40px 480px 40px;
+	grid-template-rows: 40px 480px 100px;
 	gap: 5px;
 }
 
@@ -176,12 +176,16 @@ form {
 	border: 1px solid black;
 	padding: 5px;
 	font-size: .75em;
+
+	display: grid;
+	grid-template-columns: 80px 30px 50px auto;
+	grid-template-rows: 30px 30px 30px;
 }
 #hueSwatch {
 	margin: 5px;
 	height: 1.2em;
 	width: 1.2em;
-	background-color: red;
+	background-color: purple;
 	display: inline-grid;
 	/* make four cells, r, y, g, b */
 }
@@ -189,7 +193,7 @@ form {
 	margin: 5px;
 	height: 1.2em;
 	width: 1.2em;
-	background-color: green;
+	background-color: pink;
 	display: inline-grid;
 	/* make two cells, 808080, 0F0 */
 }
@@ -197,7 +201,7 @@ form {
 	margin: 5px;
 	height: 1.2em;
 	width: 1.2em;
-	background-color: blue;
+	background-color: lightcoral;
 	display: inline-grid;
 	/* make two cells, 000, FFF */
 }

@@ -28,7 +28,7 @@ const lightRange = hsl.querySelector('#lightRange');
 canvasDiv.appendChild(canvas);
 
 
-// import Picture
+// import Picture from '/Picture';
 // import keyHandling
 // import tools
 // import colorTools
