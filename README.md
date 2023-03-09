@@ -29,6 +29,7 @@
     - select color, moving selects only that overlap with that color/interconnected cells of that color, or a range of color
 - hold shift(or other meta) to halftone while drawing? maybe neat
 - color -> select all, edit in place via color tools
+- click & drag to select tool from popup menu
 
 #### from other programs i like
 - pyxel edit
